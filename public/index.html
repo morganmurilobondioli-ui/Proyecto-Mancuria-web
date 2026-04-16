@@ -1,0 +1,983 @@
+<!doctype html>
+<html class="no-js" lang="es">
+<head>
+    <title>Mancuria - Taller Automotriz Especializado | Chincha, Ica</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="Taller automotriz especializado en diagnostico electronico avanzado, programacion de modulos ECU, afinamiento y mantenimiento en Chincha, Ica, Peru.">
+    <meta name="theme-color" content="#0d1117">
+    <link rel="shortcut icon" href="images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="css/vendors.min.css"/>
+    <link rel="stylesheet" href="css/icon.min.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="css/responsive.css"/>
+    <link rel="stylesheet" href="demos/conference/conference.css" />
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // ================================================
+        // CONFIGURACION DE FIREBASE
+        // ================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtRTeIXyY6XAXTFa-t2OGIQfSrUBcZifI",
+            authDomain: "mancuria-automotriz.firebaseapp.com",
+            projectId: "mancuria-automotriz",
+            storageBucket: "mancuria-automotriz.firebasestorage.app",
+            messagingSenderId: "24914455876",
+            appId: "1:24914455876:web:f96a6c7d08876f55d23b11",
+            measurementId: "G-HPVK82FDHG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.buscarOT = async function() {
+            const matriculaInput = document.getElementById("matriculaInput").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");
+            const resultContainer = document.getElementById("otResultado");
+            const searchBtn = document.getElementById("btnBuscarOT");
+
+            if (!matriculaInput) {
+                resultContainer.innerHTML = alertHTML("warning","bi-exclamation-circle","Por favor ingresa la matricula de tu vehiculo.");
+                return;
+            }
+            
+            // Generar variantes con guión (formatos típicos de placas)
+            const matriculaConGuion = matriculaInput.slice(0,3) + "-" + matriculaInput.slice(3);
+            
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<span class="btn-text"><span class="spin-icon">&#9696;</span> Buscando...</span>';
+            resultContainer.innerHTML = '<div class="ot-loading"><div class="ot-spinner"></div><p class="text-white mt-15px">Consultando ordenes de trabajo...</p></div>';
+
+            try {
+                // Buscar sin guión en campo "placa"
+                let q = query(collection(db,"ordenes_trabajo"), where("placa","==",matriculaInput));
+                let snapshot = await getDocs(q);
+                
+                // Si no encuentra sin guión, buscar con guión
+                if (snapshot.empty) {
+                    q = query(collection(db,"ordenes_trabajo"), where("placa","==",matriculaConGuion));
+                    snapshot = await getDocs(q);
+                }
+                
+                if (snapshot.empty) {
+                    resultContainer.innerHTML = alertHTML("info","bi-search","No se encontraron OT para la matricula <strong>"+matriculaInput+"</strong>.<br><small class='opacity-5 mt-5px d-block'>Verifica la placa o contactanos directamente.</small>");
+                } else {
+                    let html = '<div class="ot-results-header"><i class="bi bi-car-front-fill me-10px" style="color:var(--base-color)"></i>Resultados para <strong style="color:var(--base-color)">'+matriculaInput+'</strong><span class="ot-count">'+snapshot.size+' OT encontrada'+(snapshot.size>1?'s':'')+'</span></div>';
+                    snapshot.forEach((doc) => {
+                        const d = doc.data();
+                        const estado = d.estado||"En proceso";
+                        const sc = estado.toLowerCase().includes("listo")||estado.toLowerCase().includes("entregado")?"estado-listo":estado.toLowerCase().includes("espera")||estado.toLowerCase().includes("pendiente")?"estado-espera":"estado-proceso";
+                        const ic = sc==="estado-listo"?"bi-check-circle-fill":sc==="estado-espera"?"bi-clock-fill":"bi-gear-fill";
+                        html += '<div class="ot-card"><div class="ot-card-header"><div class="ot-numero"><span class="ot-label">OT #</span><span class="ot-value">'+(d.numero_ot||doc.id)+'</span></div><div class="ot-estado '+sc+'"><i class="bi '+ic+' me-5px"></i>'+estado+'</div></div><div class="ot-card-body"><div class="ot-info-grid"><div class="ot-info-item"><span class="ot-info-label"><i class="bi bi-car-front me-5px"></i>Vehiculo</span><span class="ot-info-value">'+(d.marcaModelo||'')+'</span></div><div class="ot-info-item"><span class="ot-info-label"><i class="bi bi-calendar3 me-5px"></i>Fecha ingreso</span><span class="ot-info-value">'+(d.fecha||'No especificada')+'</span></div><div class="ot-info-item"><span class="ot-info-label"><i class="bi bi-tools me-5px"></i>Trabajo realizado</span><span class="ot-info-value">'+(d.trabajoRealizado||'No especificado')+'</span></div><div class="ot-info-item"><span class="ot-info-label"><i class="bi bi-person-fill me-5px"></i>Usuario</span><span class="ot-info-value">'+(d.usuario||'Por asignar')+'</span></div></div>'+(d.observaciones?'<div class="ot-observaciones"><span class="ot-info-label"><i class="bi bi-chat-text me-5px"></i>Observaciones</span><p class="ot-obs-text">'+d.observaciones+'</p></div>':'')+(d.fecha?'<div class="ot-entrega"><i class="bi bi-calendar-check-fill me-5px" style="color:var(--base-color)"></i>Fecha de consulta: <strong class="text-white">'+d.fecha+'</strong></div>':'')+'</div></div>';
+                    });
+                    resultContainer.innerHTML = html;
+                }
+            } catch(err) {
+                resultContainer.innerHTML = alertHTML("danger","bi-exclamation-triangle","Error al consultar. Intenta nuevamente o contactanos. <small class='d-block mt-5px opacity-5'>"+err.message+"</small>");
+            } finally {
+                searchBtn.disabled = false;
+                searchBtn.innerHTML = '<span class="btn-text">Buscar OT</span><span class="btn-icon"><i class="bi bi-search"></i></span>';
+            }
+        };
+
+        function alertHTML(type,icon,msg){
+            const map={warning:"rgba(243,156,18,0.15)|rgba(243,156,18,0.3)|#f1c40f",info:"rgba(52,152,219,0.15)|rgba(52,152,219,0.3)|rgba(255,255,255,0.85)",danger:"rgba(231,76,60,0.15)|rgba(231,76,60,0.3)|#e74c3c"};
+            const [bg,border,color]=map[type].split("|");
+            return '<div style="padding:20px 24px;border-radius:8px;margin-top:20px;font-size:15px;background:'+bg+';border:1px solid '+border+';color:'+color+'"><i class="bi '+icon+' me-10px"></i>'+msg+'</div>';
+        }
+    </script>
+
+    <style>
+    /* ===== GLOBAL RESPONSIVE ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    img { max-width: 100%; height: auto; }
+
+    /* ===== WHATSAPP FLOATING BUTTON ===== */
+    .whatsapp-float {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        width: 60px;
+        height: 60px;
+        background: #25D366;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+        text-decoration: none;
+        transition: transform .3s, box-shadow .3s;
+        animation: wa-pulse 2.5s infinite;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.7); }
+    .whatsapp-float svg { width: 32px; height: 32px; fill: #fff; }
+    .whatsapp-tooltip {
+        position: fixed;
+        bottom: 32px;
+        right: 94px;
+        background: #fff;
+        color: #333;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 4px 16px rgba(0,0,0,.15);
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .3s;
+        z-index: 9998;
+    }
+    .whatsapp-tooltip::after {
+        content: '';
+        position: absolute;
+        right: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 5px solid transparent;
+        border-left-color: #fff;
+    }
+    .whatsapp-float:hover + .whatsapp-tooltip { opacity: 1; }
+    @keyframes wa-pulse {
+        0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.5)}
+        50%{box-shadow:0 4px 32px rgba(37,211,102,.9),0 0 0 10px rgba(37,211,102,.1)}
+    }
+
+    /* ===== SERVICE CARDS ===== */
+    .service-card {
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform .3s, box-shadow .3s, border-color .3s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .service-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,.4); border-color: rgba(255,255,255,.25); }
+    .service-card-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: rgba(255,255,255,.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .service-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .service-card:hover .service-card-img img { transform: scale(1.05); }
+    .service-card-img-placeholder {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.02) 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        cursor: pointer;
+        transition: background .3s;
+        position: relative;
+    }
+    .service-card-img-placeholder:hover { background: rgba(255,255,255,.07); }
+    .service-card-img-placeholder i { font-size: 36px; opacity: .3; }
+    .service-card-img-placeholder span { font-size: 12px; opacity: .4; text-transform: uppercase; letter-spacing: 1px; }
+    .upload-hint {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(255,255,255,.1);
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 11px;
+        color: rgba(255,255,255,.6);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .service-card-body { padding: 20px 22px; flex: 1; display: flex; flex-direction: column; }
+    .service-card-price {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255,255,255,.08);
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        margin-top: auto;
+        align-self: flex-start;
+    }
+    .service-card-price span { color: rgba(255,255,255,.5); font-size: 12px; font-weight: 400; }
+
+    /* ===== GALLERY SECTION ===== */
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media(max-width:768px) { .gallery-grid { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:480px) { .gallery-grid { grid-template-columns: 1fr; } }
+    .gallery-item {
+        aspect-ratio: 1;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        background: rgba(255,255,255,.04);
+        border: 2px dashed rgba(255,255,255,.12);
+        cursor: pointer;
+        transition: all .3s;
+    }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-item-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity .3s;
+    }
+    .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+    .gallery-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 20px;
+        text-align: center;
+    }
+    .gallery-placeholder i { font-size: 32px; opacity: .25; }
+    .gallery-placeholder p { font-size: 12px; opacity: .35; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ===== OT SEARCH STYLES ===== */
+    .ot-search-wrapper { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.15); border-radius: 12px; padding: 36px; }
+    @media(max-width:576px) { .ot-search-wrapper { padding: 22px 18px; } }
+    .ot-input-group { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }
+    #matriculaInput { background: rgba(255,255,255,.1); border: 2px solid rgba(255,255,255,.2); border-radius: 8px; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 5px; padding: 14px 20px; text-transform: uppercase; flex: 1; min-width: 160px; transition: border-color .3s; }
+    #matriculaInput::placeholder { color: rgba(255,255,255,.35); letter-spacing: 2px; font-weight: 400; font-size: 15px; }
+    #matriculaInput:focus { outline: none; border-color: var(--base-color,#ff6b00); }
+    @media(max-width:576px) { #matriculaInput { font-size:16px; letter-spacing:3px; padding:12px 16px; } }
+    .ot-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 10px; margin-top: 20px; overflow: hidden; transition: transform .2s, box-shadow .2s; }
+    .ot-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,.3); }
+    .ot-card-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: rgba(255,255,255,.07); border-bottom: 1px solid rgba(255,255,255,.1); flex-wrap: wrap; gap: 10px; }
+    .ot-label { color: rgba(255,255,255,.5); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .ot-value { color: #fff; font-size: 18px; font-weight: 700; margin-left: 6px; }
+    .ot-estado { font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: .5px; }
+    .estado-listo { background: rgba(39,174,96,.2); color: #2ecc71; border: 1px solid rgba(39,174,96,.4); }
+    .estado-proceso { background: rgba(52,152,219,.2); color: #3498db; border: 1px solid rgba(52,152,219,.4); }
+    .estado-espera { background: rgba(243,156,18,.2); color: #f39c12; border: 1px solid rgba(243,156,18,.4); }
+    .ot-card-body { padding: 20px; }
+    .ot-info-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 14px; margin-bottom: 14px; }
+    .ot-info-label { font-size: 11px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 3px; }
+    .ot-info-value { font-size: 14px; color: #fff; font-weight: 500; }
+    .ot-observaciones { border-top: 1px solid rgba(255,255,255,.1); padding-top: 14px; }
+    .ot-obs-text { color: rgba(255,255,255,.7); font-size: 14px; margin: 6px 0 0; line-height: 1.6; }
+    .ot-entrega { margin-top: 14px; padding: 10px 14px; background: rgba(255,255,255,.06); border-radius: 6px; font-size: 14px; color: rgba(255,255,255,.7); }
+    .ot-results-header { font-size: 15px; color: rgba(255,255,255,.7); padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.1); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ot-count { background: rgba(255,255,255,.1); border-radius: 20px; padding: 2px 10px; font-size: 12px; margin-left: auto; }
+    .ot-loading { text-align: center; padding: 40px; }
+    .ot-spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,.1); border-top-color: var(--base-color,#ff6b00); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin-icon { display: inline-block; animation: spin .8s linear infinite; }
+
+    /* ===== MAP ===== */
+    .map-wrapper {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 2px solid rgba(255,255,255,.1);
+        box-shadow: 0 8px 32px rgba(0,0,0,.4);
+        height: 400px;
+    }
+    .map-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
+    @media(max-width:768px) { .map-wrapper { height: 280px; } }
+
+    /* ===== CONTACT INFO CARDS ===== */
+    .contact-info-card {
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 12px;
+        padding: 24px 20px;
+        text-align: center;
+        transition: all .3s;
+        height: 100%;
+    }
+    .contact-info-card:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); transform: translateY(-3px); }
+
+    /* ===== RESPONSIVE HERO ===== */
+    @media(max-width:576px) {
+        .hero-title-outline { font-size: 60px !important; }
+        .hero-subtitle { font-size: 20px !important; top: -20px !important; }
+        .hero-desc { font-size: 14px !important; }
+        .ot-search-wrapper { padding: 18px; }
+        .gallery-grid { gap: 8px; }
+    }
+
+    /* ===== SECTION MOBILE PADDING ===== */
+    @media(max-width:576px) {
+        section { padding-top: 60px !important; padding-bottom: 60px !important; }
+        .ot-input-group { flex-direction: column; }
+        #btnBuscarOT { width: 100%; justify-content: center; }
+        .ot-info-grid { grid-template-columns: 1fr 1fr; }
+    }
+    </style>
+</head>
+<body data-mobile-nav-style="classic">
+
+<!-- ===== WHATSAPP FLOTANTE ===== -->
+<a href="https://wa.me/51946359204?text=Hola%20Mancuria,%20quiero%20consultar%20sobre..." target="_blank" class="whatsapp-float" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
+<div class="whatsapp-tooltip">Escribenos por WhatsApp</div>
+
+<!-- ===== HEADER ===== -->
+<header>
+    <nav class="navbar navbar-expand-lg header-transparent bg-transparent disable-fixed">
+        <div class="container-fluid">
+            <div class="col-auto col-lg-2 me-lg-0 me-auto">
+                <a class="navbar-brand" href="index.html">
+                    <span class="alt-font fw-800 fs-22 text-white default-logo" style="letter-spacing:-1px">MANCURIA</span>
+                    <span class="alt-font fw-800 fs-22 alt-logo" style="letter-spacing:-1px;color:#17161a">MANCURIA</span>
+                    <span class="alt-font fw-800 fs-22 mobile-logo" style="letter-spacing:-1px;color:#17161a">MANCURIA</span>
+                </a>
+            </div>
+            <div class="col-auto menu-order position-static">
+                <button class="navbar-toggler float-start" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-line"></span><span class="navbar-toggler-line"></span>
+                    <span class="navbar-toggler-line"></span><span class="navbar-toggler-line"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav alt-font ls-05px">
+                        <li class="nav-item"><a href="#inicio" class="nav-link">Inicio</a></li>
+                        <li class="nav-item"><a href="#servicios" class="nav-link">Servicios</a></li>
+                        <li class="nav-item"><a href="#buscar-ot" class="nav-link">Buscar OT</a></li>
+                        <li class="nav-item"><a href="#galeria" class="nav-link">Galeria</a></li>
+                        <li class="nav-item"><a href="#nosotros" class="nav-link">Nosotros</a></li>
+                        <li class="nav-item"><a href="#ubicacion" class="nav-link">Ubicacion</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-auto col-lg-2 text-end xs-ps-0 xs-pe-0">
+                <div class="header-icon">
+                    <div class="header-button">
+                        <a href="#buscar-ot" class="btn btn-small text-transform-none btn-transparent-white-light border-1 left-icon btn-rounded fw-500">
+                            <i class="bi bi-search d-none d-xl-inline-block me-5px"></i>Buscar OT
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- ===== HERO ===== -->
+<section id="inicio" class="p-0 full-screen ipad-top-space-margin md-h-600px sm-h-500px position-relative bg-base-color background-position-left-top" style="background-image:url('images/vertical-line-bg-dark.svg')">
+    <div id="particles-style-01" class="position-absolute h-100 top-0 left-0 w-100" data-particle="true" data-particle-options='{"particles":{"number":{"value":40,"density":{"enable":true,"value_area":800}},"color":{"value":"#232323"},"shape":{"type":"circle"},"opacity":{"value":0.25},"size":{"value":3,"random":true},"line_linked":{"enable":true,"distance":150,"color":"#232323","opacity":0.15,"width":1},"move":{"enable":true,"speed":3}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"repulse"}}},"retina_detect":true}'></div>
+    <div class="container h-100">
+        <div class="row align-items-center h-100 justify-content-center">
+            <div class="col-md-12 position-relative text-white d-flex flex-column justify-content-center text-center h-100">
+                <span class="alt-font hero-title-outline fs-225 lg-fs-190 md-fs-160 sm-fs-100 xs-fs-70 ls-2px md-ls-1px xs-ls-0px fw-600 text-outline text-outline-width-2px d-inline-block"
+                    data-fancy-text='{"string":["Mancuria"],"duration":500,"delay":500,"speed":50,"clipPath":["inset(0 200px 0 0)","inset(0px 0px 0px 0px)"],"easing":"easeOutCubic"}'></span>
+                <span class="alt-font hero-subtitle fs-50 md-fs-36 xs-fs-22 position-relative top-minus-40px lg-top-minus-20px xs-top-minus-5px text-white fw-400"
+                    data-anime='{"opacity":[0,1],"easing":"easeOutQuad","duration":1000,"delay":800}'>
+                    Taller Automotriz Especializado
+                </span>
+                <p class="hero-desc text-white opacity-8 fs-17 md-fs-15 mb-35px mt-minus-20px"
+                    data-anime='{"opacity":[0,1],"translateY":[15,0],"easing":"easeOutCubic","duration":1000,"delay":900}'>
+                    Diagnostico electronico avanzado &bull; Programacion de modulos ECU &bull; Afinamiento y Mantenimiento
+                </p>
+                <div class="hero-actions d-flex gap-3 justify-content-center flex-wrap"
+                    data-anime='{"opacity":[0,1],"translateY":[40,0],"easing":"easeOutCubic","duration":1000,"delay":1000}'>
+                    <a href="#buscar-ot" class="btn btn-extra-large btn-dark-gray btn-hover-animation btn-rounded btn-box-shadow align-self-center">
+                        <span><span class="btn-text"><i class="bi bi-search me-10px"></i>Ver estado de mi vehiculo</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
+                    </a>
+                    <a href="#servicios" class="btn btn-extra-large btn-transparent-white-light border-1 btn-rounded align-self-center">
+                        <span><span class="btn-text">Ver servicios</span><span class="btn-icon"><i class="fa-solid fa-arrow-down"></i></span></span>
+                    </a>
+                </div>
+                <div class="position-absolute bottom-60px md-bottom-40px xs-bottom-20px left-0px right-0px"
+                    data-anime='{"opacity":[0,1],"translateY":[15,0],"easing":"easeOutCubic","duration":1000,"delay":1200}'>
+                    <span class="alt-font text-uppercase fw-500 ls-1px fs-14">
+                        <i class="feather icon-feather-map-pin icon-small me-5px"></i>Av. Jose Olaya 420, Chincha, Ica &mdash; Peru
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PILLARS ===== -->
+<section class="bg-dark-midnight-blue border-bottom border-color-transparent-white-light half-section">
+    <div class="container">
+        <div class="row row-cols-auto row-cols-lg-3 row-cols-md-3 row-cols-1 justify-content-center"
+            data-anime='{"el":"childs","translateX":[0,0],"opacity":[0,1],"duration":1200,"delay":0,"staggervalue":300,"easing":"easeOutQuad"}'>
+            <div class="col mb-30px mb-md-0">
+                <div class="feature-box feature-box-left-icon-middle">
+                    <div class="feature-box-icon ms-30px me-30px"><h1 class="alt-font text-outline text-outline-width-2px text-outline-color-base-color fw-700 ls-minus-1px mb-0">01</h1></div>
+                    <div class="feature-box-content border-start border-color-transparent-white-light ps-30px pe-30px last-paragraph-no-margin"><span class="text-white fs-22 alt-font d-inline-block fw-300">Diagnostico electronico</span></div>
+                </div>
+            </div>
+            <div class="col mb-30px mb-md-0">
+                <div class="feature-box feature-box-left-icon-middle">
+                    <div class="feature-box-icon ms-30px me-30px"><h1 class="alt-font text-outline text-outline-width-2px text-outline-color-base-color fw-700 ls-minus-1px mb-0">02</h1></div>
+                    <div class="feature-box-content border-start border-color-transparent-white-light ps-30px pe-30px last-paragraph-no-margin"><span class="text-white fs-22 alt-font d-inline-block fw-300">Programacion de modulos</span></div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="feature-box feature-box-left-icon-middle">
+                    <div class="feature-box-icon ms-30px me-30px"><h1 class="alt-font text-outline text-outline-width-2px text-outline-color-base-color fw-700 ls-minus-1px mb-0">03</h1></div>
+                    <div class="feature-box-content border-start border-color-transparent-white-light ps-30px pe-30px last-paragraph-no-margin"><span class="text-white fs-22 alt-font d-inline-block fw-300">Flotas comerciales</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SERVICIOS (CON FOTOS) ===== -->
+<section id="servicios" class="bg-midnight-blue" style="background-image:url('images/lab-emprende-experts-bg.png');background-position:left bottom;background-repeat:no-repeat">
+    <div class="container">
+        <div class="row justify-content-center text-center mb-6"
+            data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":600,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
+            <div class="col-lg-8">
+                <h2 class="alt-font text-white fw-500 ls-minus-2px mb-15px">
+                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Nuestros Servicios
+                </h2>
+                <p class="opacity-7 fs-16">Tecnologia de diagnostico avanzada para todos los modelos y marcas. Insumos premium Liqui Moly y Wurth.</p>
+                <p class="opacity-4 fs-13 mt-10px">
+                    <i class="bi bi-info-circle me-5px"></i>
+                    Las imagenes de cada servicio se pueden reemplazar con fotos reales del taller
+                </p>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4"
+            data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":1200,"delay":0,"staggervalue":150,"easing":"easeOutQuad"}'>
+
+            <!-- Servicio 1 -->
+            <div class="col">
+                <div class="service-card">
+                    <div class="service-card-img">
+                        <!-- REEMPLAZA src con la foto real: <img src="images/servicio-osciloscopio.jpg" alt="Diagnostico Osciloscopio"> -->
+                        <div class="service-card-img-placeholder text-white">
+                            <i class="bi bi-activity"></i>
+                            <span>Foto del servicio</span>
+                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Diagnostico Avanzado con Osciloscopio</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Nuestro diagnostico con osciloscopio obtiene resultados precisos de la condicion electrica y electronica de tu vehiculo.</p>
+                        <div class="service-card-price">S/ 380.00 <span>PEN</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicio 2 -->
+            <div class="col">
+                <div class="service-card">
+                    <div class="service-card-img">
+                        <div class="service-card-img-placeholder text-white">
+                            <i class="bi bi-tools"></i>
+                            <span>Foto del servicio</span>
+                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Mantenimiento + Afinamiento Electronico</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Servicio de mantenimiento mayor y afinamiento electronico con insumos de primera linea Liqui Moly y Wurth.</p>
+                        <div class="service-card-price">S/ 450.00 <span>PEN</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicio 3 -->
+            <div class="col">
+                <div class="service-card">
+                    <div class="service-card-img">
+                        <div class="service-card-img-placeholder text-white">
+                            <i class="bi bi-key-fill"></i>
+                            <span>Foto del servicio</span>
+                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Programacion de Llaves con Chip</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Trabajamos en los siguientes modulos: Inmovilizadores, ECU y llaves transponder para todas las marcas.</p>
+                        <div class="service-card-price">S/ 300.00 <span>PEN</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicio 4 -->
+            <div class="col">
+                <div class="service-card">
+                    <div class="service-card-img">
+                        <div class="service-card-img-placeholder text-white">
+                            <i class="bi bi-droplet-fill"></i>
+                            <span>Foto del servicio</span>
+                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Limpieza de Tanques</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Realizamos limpieza de tanques con solventes de muy alta calidad para eliminar sedimentos y contaminantes.</p>
+                        <div class="service-card-price">S/ 150.00 <span>PEN</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicio 5 -->
+            <div class="col">
+                <div class="service-card">
+                    <div class="service-card-img">
+                        <div class="service-card-img-placeholder text-white">
+                            <i class="bi bi-circle"></i>
+                            <span>Foto del servicio</span>
+                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Rectificacion de Discos</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Hacemos rectificacion de discos de freno, revisamos y calibramos para garantizar la seguridad de tu vehiculo.</p>
+                        <div class="service-card-price">S/ 150.00 <span>PEN</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicio 6 -->
+            <div class="col">
+                <div class="service-card">
+                    <div class="service-card-img">
+                        <div class="service-card-img-placeholder text-white">
+                            <i class="bi bi-cpu-fill"></i>
+                            <span>Foto del servicio</span>
+                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Afinamiento Electronico Automotriz</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Realiza tu afinamiento electronico y evita desgastes prematuros. Mejora el rendimiento y consumo de combustible.</p>
+                        <div class="service-card-price">S/ 300.00 <span>PEN</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicio 7 -->
+            <div class="col">
+                <div class="service-card">
+                    <div class="service-card-img">
+                        <div class="service-card-img-placeholder text-white">
+                            <i class="bi bi-wrench-adjustable"></i>
+                            <span>Foto del servicio</span>
+                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Mantenimiento Automotriz</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Realizamos mantenimientos con aceites 100% sinteticos de alta gama para prolongar la vida util de tu motor.</p>
+                        <div class="service-card-price">S/ 250.00 <span>PEN</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Instrucciones para agregar fotos -->
+        <div class="row justify-content-center mt-40px">
+            <div class="col-lg-8">
+                <div style="background:rgba(255,165,0,.08);border:1px dashed rgba(255,165,0,.3);border-radius:10px;padding:20px 24px;">
+                    <p class="mb-0 fs-14" style="color:rgba(255,165,0,.9)">
+                        <i class="bi bi-lightbulb-fill me-10px"></i>
+                        <strong>Como agregar fotos reales:</strong> En el archivo <code>index.html</code>, reemplaza cada <code>&lt;div class="service-card-img-placeholder"&gt;</code> por 
+                        <code>&lt;img src="images/NOMBRE-FOTO.jpg" alt="Descripcion"&gt;</code> dentro de <code>&lt;div class="service-card-img"&gt;</code>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== BUSCAR OT ===== -->
+<section id="buscar-ot" class="bg-dark-midnight-blue pt-7 pb-7">
+    <div class="container">
+        <div class="row justify-content-center text-center mb-6"
+            data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":600,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
+            <div class="col-lg-7">
+                <span class="alt-font fw-600 fs-15 text-uppercase ls-2px d-block mb-15px" style="color:var(--base-color)">
+                    <i class="bi bi-search me-8px"></i>Seguimiento en tiempo real
+                </span>
+                <h2 class="alt-font text-white fw-500 ls-minus-2px mb-15px">Como esta tu vehiculo?</h2>
+                <p class="opacity-7 fs-17">Ingresa la matricula/placa y consulta el estado de tu Orden de Trabajo al instante.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12"
+                data-anime='{"translateY":[40,0],"opacity":[0,1],"duration":800,"delay":200,"easing":"easeOutQuad"}'>
+                <div class="ot-search-wrapper">
+                    <label class="text-white fw-500 mb-15px d-block fs-16">
+                        <i class="bi bi-car-front-fill me-10px" style="color:var(--base-color)"></i>Matricula / Placa del vehiculo
+                    </label>
+                    <div class="ot-input-group">
+                        <input type="text" id="matriculaInput" placeholder="Ej: ABC123"
+                            maxlength="8" autocomplete="off" spellcheck="false"
+                            onkeypress="if(event.key==='Enter') window.buscarOT()" />
+                        <button id="btnBuscarOT" onclick="window.buscarOT()"
+                            class="btn btn-large btn-base-color btn-hover-animation btn-rounded btn-box-shadow">
+                            <span><span class="btn-text">Buscar OT</span><span class="btn-icon"><i class="bi bi-search"></i></span></span>
+                        </button>
+                    </div>
+                    <p class="opacity-5 fs-12 mt-12px mb-0"><i class="bi bi-info-circle me-5px"></i>Solo letras y numeros sin guiones. Ej: <strong class="text-white">ABC123</strong></p>
+                    <div id="otResultado"></div>
+                </div>
+                <div class="row row-cols-3 g-3 mt-15px text-center">
+                    <div class="col"><div class="p-12px border border-color-transparent-white-light border-radius-6px">
+                        <i class="bi bi-gear-fill fs-22 d-block mb-5px" style="color:#3498db"></i>
+                        <span class="fs-12 text-white fw-600 d-block">En proceso</span>
+                        <span class="fs-11 opacity-5">Trabajando</span>
+                    </div></div>
+                    <div class="col"><div class="p-12px border border-color-transparent-white-light border-radius-6px">
+                        <i class="bi bi-clock-fill fs-22 d-block mb-5px" style="color:#f39c12"></i>
+                        <span class="fs-12 text-white fw-600 d-block">En espera</span>
+                        <span class="fs-11 opacity-5">Esperando repuesto</span>
+                    </div></div>
+                    <div class="col"><div class="p-12px border border-color-transparent-white-light border-radius-6px">
+                        <i class="bi bi-check-circle-fill fs-22 d-block mb-5px" style="color:#2ecc71"></i>
+                        <span class="fs-12 text-white fw-600 d-block">Listo</span>
+                        <span class="fs-11 opacity-5">Puede retirar</span>
+                    </div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== GALERIA DEL TALLER ===== -->
+<section id="galeria" class="bg-midnight-blue" style="background-image:url('images/lab-emprende-schedule-bg.png');background-position:left bottom;background-repeat:no-repeat">
+    <div class="container">
+        <div class="row justify-content-center text-center mb-6"
+            data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":600,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
+            <div class="col-lg-8">
+                <h2 class="alt-font text-white fw-500 ls-minus-2px mb-15px">
+                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Galeria del Taller
+                </h2>
+                <p class="opacity-7 fs-16">Conoce nuestras instalaciones, equipos de diagnostico y trabajos realizados.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12"
+                data-anime='{"translateY":[40,0],"opacity":[0,1],"duration":800,"delay":200,"easing":"easeOutQuad"}'>
+                <div class="gallery-grid">
+
+                    <!-- FOTO 1 - Reemplazar con: <img src="images/taller-01.jpg" alt="Taller"> -->
+                    <div class="gallery-item">
+                        <div class="gallery-placeholder text-white">
+                            <i class="bi bi-camera-fill"></i>
+                            <p>Foto del taller 1</p>
+                        </div>
+                        <div class="gallery-item-overlay">
+                            <i class="bi bi-zoom-in text-white fs-30"></i>
+                        </div>
+                    </div>
+
+                    <!-- FOTO 2 -->
+                    <div class="gallery-item">
+                        <div class="gallery-placeholder text-white">
+                            <i class="bi bi-camera-fill"></i>
+                            <p>Equipo de diagnostico</p>
+                        </div>
+                        <div class="gallery-item-overlay">
+                            <i class="bi bi-zoom-in text-white fs-30"></i>
+                        </div>
+                    </div>
+
+                    <!-- FOTO 3 -->
+                    <div class="gallery-item">
+                        <div class="gallery-placeholder text-white">
+                            <i class="bi bi-camera-fill"></i>
+                            <p>Trabajo en progreso</p>
+                        </div>
+                        <div class="gallery-item-overlay">
+                            <i class="bi bi-zoom-in text-white fs-30"></i>
+                        </div>
+                    </div>
+
+                    <!-- FOTO 4 -->
+                    <div class="gallery-item">
+                        <div class="gallery-placeholder text-white">
+                            <i class="bi bi-camera-fill"></i>
+                            <p>Osciloscopio</p>
+                        </div>
+                        <div class="gallery-item-overlay">
+                            <i class="bi bi-zoom-in text-white fs-30"></i>
+                        </div>
+                    </div>
+
+                    <!-- FOTO 5 -->
+                    <div class="gallery-item">
+                        <div class="gallery-placeholder text-white">
+                            <i class="bi bi-camera-fill"></i>
+                            <p>Programacion ECU</p>
+                        </div>
+                        <div class="gallery-item-overlay">
+                            <i class="bi bi-zoom-in text-white fs-30"></i>
+                        </div>
+                    </div>
+
+                    <!-- FOTO 6 -->
+                    <div class="gallery-item">
+                        <div class="gallery-placeholder text-white">
+                            <i class="bi bi-camera-fill"></i>
+                            <p>Resultado final</p>
+                        </div>
+                        <div class="gallery-item-overlay">
+                            <i class="bi bi-zoom-in text-white fs-30"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-30px" style="background:rgba(255,165,0,.08);border:1px dashed rgba(255,165,0,.3);border-radius:10px;padding:18px 22px;">
+                    <p class="mb-0 fs-14" style="color:rgba(255,165,0,.9)">
+                        <i class="bi bi-lightbulb-fill me-10px"></i>
+                        <strong>Como agregar fotos de la galeria:</strong> Reemplaza cada <code>&lt;div class="gallery-placeholder"&gt;</code> con
+                        <code>&lt;img src="images/taller-01.jpg" alt="Descripcion"&gt;</code>. Las imagenes se adaptan automaticamente al grid.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== NOSOTROS ===== -->
+<section id="nosotros" class="bg-dark-midnight-blue" style="background-image:url('images/lab-emprende-about-bg.png');background-position:right top;background-repeat:no-repeat">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-5 col-md-10 md-mb-40px"
+                data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":800,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
+                <h2 class="alt-font text-white fw-500 ls-minus-2px mb-35px">
+                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Quienes somos
+                </h2>
+                <div class="icon-with-text-style-01 mb-28px pb-28px border-bottom border-color-transparent-white-light">
+                    <div class="feature-box feature-box-left-icon-middle last-paragraph-no-margin">
+                        <div class="feature-box-icon me-15px lh-0px"><i class="bi bi-bullseye icon-very-medium text-white"></i></div>
+                        <div class="feature-box-content"><span class="d-inline-block alt-font text-white fs-18">Mision</span></div>
+                        <div class="mt-8px w-100 fs-15">Brindar soluciones especializadas en electronica y mecatronica automotriz en Chincha, utilizando diagnostico avanzado no invasivo y programacion de modulos para garantizar la maxima eficiencia y seguridad.</div>
+                    </div>
+                </div>
+                <div class="icon-with-text-style-01 mb-35px">
+                    <div class="feature-box feature-box-left-icon-middle last-paragraph-no-margin">
+                        <div class="feature-box-icon me-15px lh-0px"><i class="bi bi-eye icon-very-medium text-white"></i></div>
+                        <div class="feature-box-content"><span class="d-inline-block alt-font text-white fs-18">Vision</span></div>
+                        <div class="mt-8px w-100 fs-15">Consolidarnos como el taller multimarca lider en la Region Ica, reconocidos por la digitalizacion de procesos y transparencia en la gestion de activos.</div>
+                    </div>
+                </div>
+                <!-- Marcas -->
+                <p class="opacity-5 fs-13 mb-10px text-uppercase ls-1px">Marcas que atendemos:</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:30px;font-size:13px;color:rgba(255,255,255,.8)"><i class="bi bi-check-circle-fill" style="color:var(--base-color);font-size:11px"></i>Toyota</span>
+                    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:30px;font-size:13px;color:rgba(255,255,255,.8)"><i class="bi bi-check-circle-fill" style="color:var(--base-color);font-size:11px"></i>Hyundai</span>
+                    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:30px;font-size:13px;color:rgba(255,255,255,.8)"><i class="bi bi-check-circle-fill" style="color:var(--base-color);font-size:11px"></i>Kia</span>
+                    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:30px;font-size:13px;color:rgba(255,255,255,.8)"><i class="bi bi-check-circle-fill" style="color:var(--base-color);font-size:11px"></i>Chevrolet</span>
+                    <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:30px;font-size:13px;color:rgba(255,255,255,.8)"><i class="bi bi-check-circle-fill" style="color:var(--base-color);font-size:11px"></i>Multimarca</span>
+                </div>
+            </div>
+
+            <div class="col-xl-5 offset-lg-1 col-md-10 col-lg-5"
+                data-anime='{"el":"childs","translateY":[40,0],"opacity":[0,1],"duration":600,"delay":200,"staggervalue":200,"easing":"easeOutQuad"}'>
+                <h3 class="alt-font text-white fw-500 ls-minus-1px mb-25px">A quien atendemos</h3>
+                <div class="p-25px border border-color-transparent-white-light border-radius-6px mb-18px" style="background:rgba(255,255,255,.03)">
+                    <div class="d-flex align-items-center mb-12px">
+                        <i class="bi bi-person-fill fs-22 me-12px" style="color:var(--base-color)"></i>
+                        <h5 class="alt-font text-white fw-500 mb-0 fs-17">Propietarios particulares</h5>
+                    </div>
+                    <p class="opacity-7 fs-14 last-paragraph-no-margin">Vehiculos modernos 2010 en adelante que requieren diagnostico especializado. Valoran rapidez y exactitud desde la primera visita.</p>
+                </div>
+                <div class="p-25px border border-color-transparent-white-light border-radius-6px" style="background:rgba(255,255,255,.03)">
+                    <div class="d-flex align-items-center mb-12px">
+                        <i class="bi bi-buildings-fill fs-22 me-12px" style="color:var(--base-color)"></i>
+                        <h5 class="alt-font text-white fw-500 mb-0 fs-17">Empresas con flotas</h5>
+                    </div>
+                    <p class="opacity-7 fs-14 last-paragraph-no-margin">Transporte de carga, reparto y taxi corporativo. Historial por unidad, presupuestos detallados y confirmacion del estado antes y despues de cada intervencion.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== UBICACION + CONTACTO ===== -->
+<section id="ubicacion" class="bg-midnight-blue">
+    <div class="container">
+        <div class="row justify-content-center text-center mb-6"
+            data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":600,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
+            <div class="col-lg-8">
+                <h2 class="alt-font text-white fw-500 ls-minus-2px mb-15px">
+                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Como Llegarnos
+                </h2>
+                <p class="opacity-7 fs-16">Estamos ubicados en Chincha, a una cuadra del local Arco Iris.</p>
+            </div>
+        </div>
+
+        <!-- Contact Info Cards -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4 mb-50px"
+            data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":800,"delay":0,"staggervalue":150,"easing":"easeOutQuad"}'>
+            <div class="col">
+                <div class="contact-info-card">                     
+                    <i class="bi bi-geo-alt-fill fs-30 mb-15px d-block" style="color:var(--base-color)"></i>
+                    <h6 class="alt-font text-white fw-600 mb-10px">Direccion</h6>
+                    <p class="opacity-7 fs-14 last-paragraph-no-margin">Av. Jose Olaya 420<br>A una cuadra del local Arco Iris<br>Chincha, 11702, Peru</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="contact-info-card">
+                    <i class="bi bi-whatsapp fs-30 mb-15px d-block" style="color:#25D366"></i>
+                    <h6 class="alt-font text-white fw-600 mb-10px">WhatsApp</h6>
+                    <a href="https://wa.me/51946359204" target="_blank" class="d-block text-white opacity-7 fs-14" style="text-decoration:none">+51 946 359 204</a>
+                    <a href="https://wa.me/51946359204" target="_blank" class="btn btn-small btn-dark-gray btn-round-edge mt-12px fs-12">Enviar mensaje</a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="contact-info-card">
+                    <i class="bi bi-envelope-fill fs-30 mb-15px d-block" style="color:var(--base-color)"></i>
+                    <h6 class="alt-font text-white fw-600 mb-10px">Correo</h6>
+                    <a href="mailto:mancuriaautomotriz@gmail.com" class="d-block text-white opacity-7 fs-13" style="text-decoration:none;word-break:break-all">mancuriaautomotriz@gmail.com</a>
+                    <a href="mailto:mancuriaautomotriz@gmail.com" class="btn btn-small btn-dark-gray btn-round-edge mt-12px fs-12">Escribir correo</a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="contact-info-card">
+                    <i class="bi bi-clock-fill fs-30 mb-15px d-block" style="color:var(--base-color)"></i>
+                    <h6 class="alt-font text-white fw-600 mb-10px">Horarios</h6>
+                    <p class="opacity-7 fs-14 last-paragraph-no-margin">
+                        Lun &ndash; Vie: 8:00 &ndash; 18:00<br>
+                        Sabado: 8:00 &ndash; 13:00<br>
+                        <span class="opacity-5">Domingo: Cerrado</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAPA GOOGLE MAPS -->
+        <div class="row justify-content-center"
+            data-anime='{"translateY":[40,0],"opacity":[0,1],"duration":800,"delay":200,"easing":"easeOutQuad"}'>
+            <div class="col-12">
+                <div class="map-wrapper">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3873.456!2d-75.9754!3d-13.4095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zAv.+Jose+Olaya+420%2C+Chincha%2C+Ica%2C+Peru!5e0!3m2!1ses!2spe!4v1680000000000!5m2!1ses!2spe&q=Av+Jose+Olaya+420+Chincha+Ica+Peru"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Ubicacion Mancuria - Av. Jose Olaya 420, Chincha">
+                    </iframe>
+                </div>
+                <div class="text-center mt-20px">
+                    <a href="https://maps.google.com/?q=Av+Jose+Olaya+420+Chincha+Ica+Peru" target="_blank"
+                        class="btn btn-large btn-dark-gray btn-hover-animation btn-round-edge btn-box-shadow">
+                        <span><span class="btn-text"><i class="bi bi-google me-10px"></i>Abrir en Google Maps</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="bg-dark-midnight-blue" style="background-image:url('images/lab-emprende-page-bg.jpg')" data-parallax-background-ratio="0.3">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 text-center last-paragraph-no-margin">
+                <h2 class="alt-font text-white fw-500 mb-15px ls-minus-2px">Listo para traer tu vehiculo?</h2>
+                <p class="opacity-7 fs-17 mb-35px">Visitanos en Chincha o escribenos ahora. Diagnostico rapido y preciso desde la primera visita.</p>
+                <div class="cta-actions d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="https://wa.me/51946359204?text=Hola%20Mancuria,%20quiero%20agendar%20una%20cita" target="_blank"
+                        class="btn btn-extra-large btn-base-color btn-hover-animation btn-rounded btn-box-shadow align-self-center">
+                        <span><span class="btn-text"><i class="bi bi-whatsapp me-10px"></i>Agendar por WhatsApp</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
+                    </a>
+                    <a href="#buscar-ot" class="btn btn-extra-large btn-dark-gray btn-hover-animation btn-rounded btn-box-shadow align-self-center">
+                        <span><span class="btn-text"><i class="bi bi-search me-10px"></i>Buscar mi OT</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="bg-dark-midnight-blue" style="background-image:url('images/lab-emprende-about-bg.png');background-position:right top;background-repeat:no-repeat">
+    <div class="container">
+        <div class="row justify-content-center text-center text-sm-start g-4">
+            <div class="col-lg-3 col-sm-6">
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-map-pin align-text-bottom icon-extra-medium text-base-color me-10px"></i>Ubicacion</span>
+                <p class="mb-5px fs-14">Av. Jose Olaya 420<br>A una cuadra del local Arco Iris<br>Chincha 11702, Ica, Peru</p>
+                <a href="https://maps.google.com/?q=Av+Jose+Olaya+420+Chincha" target="_blank" class="text-decoration-line-bottom text-uppercase fs-13 alt-font fw-500">Abrir mapa</a>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-phone-call align-text-bottom icon-extra-medium text-base-color me-10px"></i>Contacto</span>
+                <a href="mailto:mancuriaautomotriz@gmail.com" class="d-block mb-5px fs-13" style="word-break:break-all">mancuriaautomotriz@gmail.com</a>
+                <a href="https://wa.me/51946359204" target="_blank" class="mb-5px d-inline-block fs-14">+51 946 359 204</a><br>
+                <a href="https://wa.me/51946359204" target="_blank" class="text-decoration-line-bottom text-uppercase fs-13 alt-font fw-500"><i class="bi bi-whatsapp me-5px"></i>WhatsApp</a>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-clock align-text-bottom icon-extra-medium text-base-color me-10px"></i>Horarios</span>
+                <p class="mb-5px fs-14">Lun &ndash; Vie: 8:00 &ndash; 18:00</p>
+                <p class="mb-5px fs-14">Sabado: 8:00 &ndash; 13:00</p>
+                <p class="mb-5px opacity-5 fs-14">Domingo: Cerrado</p>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-send align-text-bottom icon-extra-medium text-base-color me-10px"></i>Newsletter</span>
+                <p class="mb-20px fs-14">Recibe tips de mantenimiento y novedades</p>
+                <div class="d-inline-block w-100 newsletter-style-01 position-relative">
+                    <form action="email-templates/subscribe-newsletter.php" method="post">
+                        <input class="bg-white input-small border-color-white form-control required" name="email" placeholder="Tu correo electronico" type="email">
+                        <input type="hidden" name="redirect" value="">
+                        <button class="btn btn-small btn-base-color ps-15px pe-15px base-color-hover submit" aria-label="submit"><i class="feather icon-feather-mail m-0 align-middle icon-small text-white"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row align-items-center pt-6 md-pt-40px">
+            <div class="col-lg-3 col-sm-6 text-center text-sm-start">
+                <span class="alt-font fw-800 fs-24 text-white d-block" style="letter-spacing:-1px">MANCURIA</span>
+                <p class="opacity-5 fs-12 mt-4px mb-0">Taller Automotriz Especializado - Chincha, Ica</p>
+            </div>
+            <div class="col-lg-6 order-1 order-sm-3 order-lg-1 md-mt-15px">
+                <ul class="footer-navbar alt-font text-center lh-normal">
+                    <li class="nav-item"><a href="#inicio" class="nav-link">Inicio</a></li>
+                    <li class="nav-item"><a href="#servicios" class="nav-link">Servicios</a></li>
+                    <li class="nav-item"><a href="#buscar-ot" class="nav-link">Buscar OT</a></li>
+                    <li class="nav-item"><a href="#galeria" class="nav-link">Galeria</a></li>
+                    <li class="nav-item"><a href="#ubicacion" class="nav-link">Ubicacion</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-sm-6 order-3 order-sm-2 order-lg-3 text-center text-sm-end xs-mt-10px last-paragraph-no-margin">
+                <p class="fs-13">&copy; 2025 <strong class="text-white">Mancuria</strong> &mdash; Chincha, Ica</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div class="scroll-progress d-none d-xxl-block">
+    <a href="#" class="scroll-top" aria-label="scroll"><span class="scroll-text">Scroll</span><span class="scroll-line"><span class="scroll-point"></span></span></a>
+</div>
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/vendors.min.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
