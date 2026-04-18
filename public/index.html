@@ -41,123 +41,6 @@
         let currentUnsubscribe1 = null;
         let currentUnsubscribe2 = null;
         let lastMatricula = null;
-
-        window.buscarOT = async function() {
-            const matriculaInput = document.getElementById("matriculaInput").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");
-            const resultContainer = document.getElementById("otResultado");
-            const searchBtn = document.getElementById("btnBuscarOT");
-
-            if (!matriculaInput) {
-                resultContainer.innerHTML = alertHTML("warning","bi-exclamation-circle","Por favor ingresa la matricula de tu vehiculo.");
-                return;
-            }
-            
-            // Limpiar listeners anteriores si existen
-            if (currentUnsubscribe1) {
-                currentUnsubscribe1();
-                currentUnsubscribe1 = null;
-            }
-            if (currentUnsubscribe2) {
-                currentUnsubscribe2();
-                currentUnsubscribe2 = null;
-            }
-
-            lastMatricula = matriculaInput;
-            
-            // Generar variantes con guión (formatos típicos de placas)
-            const matriculaConGuion = matriculaInput.slice(0,3) + "-" + matriculaInput.slice(3);
-            
-            searchBtn.disabled = true;
-            searchBtn.innerHTML = '<span class="btn-text"><span class="spin-icon">&#9696;</span> Buscando...</span>';
-            resultContainer.innerHTML = '<div class="ot-loading"><div class="ot-spinner"></div><p class="text-white mt-15px">Consultando ordenes de trabajo en tiempo real...</p></div>';
-
-            try {
-                // Crear listeners para AMBAS variantes de placa simultáneamente
-                let allDocs = {};
-                let hasResults = false;
-
-                // Listener 1: Sin guión
-                const q1 = query(collection(db,"ordenes_trabajo"), where("placa","==",matriculaInput));
-                currentUnsubscribe1 = onSnapshot(q1, (snapshot) => {
-                    snapshot.forEach((doc) => {
-                        allDocs[doc.id] = { ...doc.data(), docId: doc.id };
-                    });
-                    
-                    // Limpiar documentos que fueron eliminados
-                    snapshot.docChanges().forEach((change) => {
-                        if (change.type === 'removed') {
-                            delete allDocs[change.doc.id];
-                        }
-                    });
-                    
-                    renderizarTodosResultados(allDocs, matriculaInput, resultContainer);
-                    hasResults = Object.keys(allDocs).length > 0;
-                    if (hasResults) {
-                        searchBtn.disabled = false;
-                        searchBtn.innerHTML = '<span class="btn-text">Buscar OT</span><span class="btn-icon"><i class="bi bi-search"></i></span>';
-                    }
-                });
-
-                // Listener 2: Con guión (para capturar ambas variantes)
-                const q2 = query(collection(db,"ordenes_trabajo"), where("placa","==",matriculaConGuion));
-                currentUnsubscribe2 = onSnapshot(q2, (snapshot) => {
-                    snapshot.forEach((doc) => {
-                        allDocs[doc.id] = { ...doc.data(), docId: doc.id };
-                    });
-                    
-                    // Limpiar documentos que fueron eliminados
-                    snapshot.docChanges().forEach((change) => {
-                        if (change.type === 'removed') {
-                            delete allDocs[change.doc.id];
-                        }
-                    });
-                    
-                    renderizarTodosResultados(allDocs, matriculaInput, resultContainer);
-                    hasResults = Object.keys(allDocs).length > 0;
-                    if (hasResults) {
-                        searchBtn.disabled = false;
-                        searchBtn.innerHTML = '<span class="btn-text">Buscar OT</span><span class="btn-icon"><i class="bi bi-search"></i></span>';
-                    }
-                });
-
-                // Timeout para mostrar mensaje si no hay resultados después de 3 segundos
-                setTimeout(() => {
-                    if (!hasResults && Object.keys(allDocs).length === 0) {
-                        resultContainer.innerHTML = alertHTML("info","bi-search","No se encontraron OT para la matricula <strong>"+matriculaInput+"</strong>.<br><small class='opacity-5 mt-5px d-block'>Verifica la placa o contactanos directamente.</small>");
-                        searchBtn.disabled = false;
-                        searchBtn.innerHTML = '<span class="btn-text">Buscar OT</span><span class="btn-icon"><i class="bi bi-search"></i></span>';
-                    }
-                }, 3000);
-                
-            } catch(err) {
-                resultContainer.innerHTML = alertHTML("danger","bi-exclamation-triangle","Error al consultar. Intenta nuevamente o contactanos. <small class='d-block mt-5px opacity-5'>"+err.message+"</small>");
-                searchBtn.disabled = false;
-                searchBtn.innerHTML = '<span class="btn-text">Buscar OT</span><span class="btn-icon"><i class="bi bi-search"></i></span>';
-            }
-        };
-
-        function renderizarTodosResultados(allDocs, matricula, resultContainer) {
-            if (Object.keys(allDocs).length === 0) {
-                return;
-            }
-
-            let html = '<div class="ot-results-header"><i class="bi bi-car-front-fill me-10px" style="color:var(--base-color)"></i>Resultados para <strong style="color:var(--base-color)">'+matricula+'</strong><span class="ot-count">'+Object.keys(allDocs).length+' OT encontrada'+(Object.keys(allDocs).length>1?'s':'')+'</span></div>';
-            
-            Object.values(allDocs).forEach((d) => {
-                const estado = d.estado||"En proceso";
-                const sc = estado.toLowerCase().includes("listo")||estado.toLowerCase().includes("entregado")?"estado-listo":estado.toLowerCase().includes("espera")||estado.toLowerCase().includes("pendiente")?"estado-espera":"estado-proceso";
-                const ic = sc==="estado-listo"?"bi-check-circle-fill":sc==="estado-espera"?"bi-clock-fill":"bi-gear-fill";
-                html += '<div class="ot-card"><div class="ot-card-header"><div class="ot-numero"><span class="ot-label">OT #</span><span class="ot-value">'+(d.numero_ot||d.docId)+'</span></div><div class="ot-estado '+sc+'"><i class="bi '+ic+' me-5px"></i>'+estado+'</div></div><div class="ot-card-body"><div class="ot-info-grid"><div class="ot-info-item"><span class="ot-info-label"><i class="bi bi-car-front me-5px"></i>Vehiculo</span><span class="ot-info-value">'+(d.marcaModelo||'')+'</span></div><div class="ot-info-item"><span class="ot-info-label"><i class="bi bi-calendar3 me-5px"></i>Fecha ingreso</span><span class="ot-info-value">'+(d.fecha||'No especificada')+'</span></div><div class="ot-info-item"><span class="ot-info-label"><i class="bi bi-tools me-5px"></i>Trabajo realizado</span><span class="ot-info-value">'+(d.trabajoRealizado||'No especificado')+'</span></div><div class="ot-info-item"><span class="ot-info-label"><i class="bi bi-person-fill me-5px"></i>Usuario</span><span class="ot-info-value">'+(d.usuario||'Por asignar')+'</span></div></div>'+(d.observaciones?'<div class="ot-observaciones"><span class="ot-info-label"><i class="bi bi-chat-text me-5px"></i>Observaciones</span><p class="ot-obs-text">'+d.observaciones+'</p></div>':'')+(d.fecha?'<div class="ot-entrega"><i class="bi bi-calendar-check-fill me-5px" style="color:var(--base-color)"></i>Fecha de consulta: <strong class="text-white">'+d.fecha+'</strong></div>':'')+'</div></div>';
-            });
-            
-            resultContainer.innerHTML = html;
-        }
-
-        function alertHTML(type,icon,msg){
-            const map={warning:"rgba(243,156,18,0.15)|rgba(243,156,18,0.3)|#f1c40f",info:"rgba(52,152,219,0.15)|rgba(52,152,219,0.3)|rgba(255,255,255,0.85)",danger:"rgba(231,76,60,0.15)|rgba(231,76,60,0.3)|#e74c3c"};
-            const [bg,border,color]=map[type].split("|");
-            return '<div style="padding:20px 24px;border-radius:8px;margin-top:20px;font-size:15px;background:'+bg+';border:1px solid '+border+';color:'+color+'"><i class="bi '+icon+' me-10px"></i>'+msg+'</div>';
-        }
     </script>
 
     <style>
@@ -398,7 +281,6 @@
     @media(max-width:576px) {
         section { padding-top: 60px !important; padding-bottom: 60px !important; }
         .ot-input-group { flex-direction: column; }
-        #btnBuscarOT { width: 100%; justify-content: center; }
         .ot-info-grid { grid-template-columns: 1fr 1fr; }
     }
     </style>
@@ -433,7 +315,7 @@
                     <ul class="navbar-nav alt-font ls-05px">
                         <li class="nav-item"><a href="#inicio" class="nav-link">Inicio</a></li>
                         <li class="nav-item"><a href="#servicios" class="nav-link">Servicios</a></li>
-                        <li class="nav-item"><a href="#buscar-ot" class="nav-link">Buscar OT</a></li>
+                        <li class="nav-item"><a href="buscarOT.html" class="nav-link">Buscar OT</a></li>
                         <li class="nav-item"><a href="#galeria" class="nav-link">Galeria</a></li>
                         <li class="nav-item"><a href="#nosotros" class="nav-link">Nosotros</a></li>
                         <li class="nav-item"><a href="#ubicacion" class="nav-link">Ubicacion</a></li>
@@ -443,7 +325,7 @@
             <div class="col-auto col-lg-2 text-end xs-ps-0 xs-pe-0">
                 <div class="header-icon">
                     <div class="header-button">
-                        <a href="#buscar-ot" class="btn btn-small text-transform-none btn-transparent-white-light border-1 left-icon btn-rounded fw-500">
+                        <a href="buscarOT.html" class="btn btn-small text-transform-none btn-transparent-white-light border-1 left-icon btn-rounded fw-500">
                             <i class="bi bi-search d-none d-xl-inline-block me-5px"></i>Buscar OT
                         </a>
                     </div>
@@ -471,7 +353,7 @@
                 </p>
                 <div class="hero-actions d-flex gap-3 justify-content-center flex-wrap"
                     data-anime='{"opacity":[0,1],"translateY":[40,0],"easing":"easeOutCubic","duration":1000,"delay":1000}'>
-                    <a href="#buscar-ot" class="btn btn-extra-large btn-dark-gray btn-hover-animation btn-rounded btn-box-shadow align-self-center">
+                    <a href="buscarOT.html" class="btn btn-extra-large btn-dark-gray btn-hover-animation btn-rounded btn-box-shadow align-self-center">
                         <span><span class="btn-text"><i class="bi bi-search me-10px"></i>Ver estado de mi vehiculo</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
                     </a>
                     <a href="#servicios" class="btn btn-extra-large btn-transparent-white-light border-1 btn-rounded align-self-center">
@@ -674,60 +556,6 @@
                         <strong>Como agregar fotos reales:</strong> En el archivo <code>index.html</code>, reemplaza cada <code>&lt;div class="service-card-img-placeholder"&gt;</code> por 
                         <code>&lt;img src="images/NOMBRE-FOTO.jpg" alt="Descripcion"&gt;</code> dentro de <code>&lt;div class="service-card-img"&gt;</code>.
                     </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== BUSCAR OT ===== -->
-<section id="buscar-ot" class="bg-dark-midnight-blue pt-7 pb-7">
-    <div class="container">
-        <div class="row justify-content-center text-center mb-6"
-            data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":600,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
-            <div class="col-lg-7">
-                <span class="alt-font fw-600 fs-15 text-uppercase ls-2px d-block mb-15px" style="color:var(--base-color)">
-                    <i class="bi bi-search me-8px"></i>Seguimiento en tiempo real
-                </span>
-                <h2 class="alt-font text-white fw-500 ls-minus-2px mb-15px">Como esta tu vehiculo?</h2>
-                <p class="opacity-7 fs-17">Ingresa la matricula/placa y consulta el estado de tu Orden de Trabajo al instante.</p>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10 col-12"
-                data-anime='{"translateY":[40,0],"opacity":[0,1],"duration":800,"delay":200,"easing":"easeOutQuad"}'>
-                <div class="ot-search-wrapper">
-                    <label class="text-white fw-500 mb-15px d-block fs-16">
-                        <i class="bi bi-car-front-fill me-10px" style="color:var(--base-color)"></i>Matricula / Placa del vehiculo
-                    </label>
-                    <div class="ot-input-group">
-                        <input type="text" id="matriculaInput" placeholder="Ej: ABC123"
-                            maxlength="8" autocomplete="off" spellcheck="false"
-                            onkeypress="if(event.key==='Enter') window.buscarOT()" />
-                        <button id="btnBuscarOT" onclick="window.buscarOT()"
-                            class="btn btn-large btn-base-color btn-hover-animation btn-rounded btn-box-shadow">
-                            <span><span class="btn-text">Buscar OT</span><span class="btn-icon"><i class="bi bi-search"></i></span></span>
-                        </button>
-                    </div>
-                    <p class="opacity-5 fs-12 mt-12px mb-0"><i class="bi bi-info-circle me-5px"></i>Solo letras y numeros sin guiones. Ej: <strong class="text-white">ABC123</strong></p>
-                    <div id="otResultado"></div>
-                </div>
-                <div class="row row-cols-3 g-3 mt-15px text-center">
-                    <div class="col"><div class="p-12px border border-color-transparent-white-light border-radius-6px">
-                        <i class="bi bi-gear-fill fs-22 d-block mb-5px" style="color:#3498db"></i>
-                        <span class="fs-12 text-white fw-600 d-block">En proceso</span>
-                        <span class="fs-11 opacity-5">Trabajando</span>
-                    </div></div>
-                    <div class="col"><div class="p-12px border border-color-transparent-white-light border-radius-6px">
-                        <i class="bi bi-clock-fill fs-22 d-block mb-5px" style="color:#f39c12"></i>
-                        <span class="fs-12 text-white fw-600 d-block">En espera</span>
-                        <span class="fs-11 opacity-5">Esperando repuesto</span>
-                    </div></div>
-                    <div class="col"><div class="p-12px border border-color-transparent-white-light border-radius-6px">
-                        <i class="bi bi-check-circle-fill fs-22 d-block mb-5px" style="color:#2ecc71"></i>
-                        <span class="fs-12 text-white fw-600 d-block">Listo</span>
-                        <span class="fs-11 opacity-5">Puede retirar</span>
-                    </div></div>
                 </div>
             </div>
         </div>
@@ -975,7 +803,7 @@
                         class="btn btn-extra-large btn-base-color btn-hover-animation btn-rounded btn-box-shadow align-self-center">
                         <span><span class="btn-text"><i class="bi bi-whatsapp me-10px"></i>Agendar por WhatsApp</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
                     </a>
-                    <a href="#buscar-ot" class="btn btn-extra-large btn-dark-gray btn-hover-animation btn-rounded btn-box-shadow align-self-center">
+                    <a href="buscarOT.html" class="btn btn-extra-large btn-dark-gray btn-hover-animation btn-rounded btn-box-shadow align-self-center">
                         <span><span class="btn-text"><i class="bi bi-search me-10px"></i>Buscar mi OT</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
                     </a>
                 </div>
@@ -1027,7 +855,7 @@
                 <ul class="footer-navbar alt-font text-center lh-normal">
                     <li class="nav-item"><a href="#inicio" class="nav-link">Inicio</a></li>
                     <li class="nav-item"><a href="#servicios" class="nav-link">Servicios</a></li>
-                    <li class="nav-item"><a href="#buscar-ot" class="nav-link">Buscar OT</a></li>
+                    <li class="nav-item"><a href="buscarOT.html" class="nav-link">Buscar OT</a></li>
                     <li class="nav-item"><a href="#galeria" class="nav-link">Galeria</a></li>
                     <li class="nav-item"><a href="#ubicacion" class="nav-link">Ubicacion</a></li>
                 </ul>

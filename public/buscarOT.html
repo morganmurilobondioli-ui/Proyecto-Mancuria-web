@@ -1,0 +1,886 @@
+<!doctype html>
+<html class="no-js" lang="es">
+<head>
+    <title>Buscar OT - Mancuria Taller Automotriz</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="Consulta el estado de tu Orden de Trabajo en Mancuria, Chincha, Ica, Peru.">
+    <meta name="theme-color" content="#0d1117">
+    <link rel="shortcut icon" href="images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="css/vendors.min.css"/>
+    <link rel="stylesheet" href="css/icon.min.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="css/responsive.css"/>
+    <link rel="stylesheet" href="demos/conference/conference.css" />
+
+    <!-- reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfrlrwsAAAAAGj55n4AnqgPR07iLEnnmywaJv-A"></script>
+
+    <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    img { max-width: 100%; height: auto; }
+
+    /* ===== WHATSAPP FLOATING BUTTON ===== */
+    .whatsapp-float {
+        position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+        width: 60px; height: 60px; background: #25D366; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 20px rgba(37,211,102,0.5); text-decoration: none;
+        transition: transform .3s, box-shadow .3s; animation: wa-pulse 2.5s infinite;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.7); }
+    .whatsapp-float svg { width: 32px; height: 32px; fill: #fff; }
+    .whatsapp-tooltip {
+        position: fixed; bottom: 32px; right: 94px; background: #fff; color: #333;
+        padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+        box-shadow: 0 4px 16px rgba(0,0,0,.15); white-space: nowrap;
+        opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 9998;
+    }
+    .whatsapp-tooltip::after {
+        content: ''; position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+        border: 5px solid transparent; border-left-color: #fff;
+    }
+    .whatsapp-float:hover + .whatsapp-tooltip { opacity: 1; }
+    @keyframes wa-pulse {
+        0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.5)}
+        50%{box-shadow:0 4px 32px rgba(37,211,102,.9),0 0 0 10px rgba(37,211,102,.1)}
+    }
+
+    /* ===== HERO OT SECTION ===== */
+    .ot-hero {
+        background: #0a0e1a;
+        padding: 140px 0 80px;
+        position: relative;
+        overflow: hidden;
+    }
+    .ot-hero::before {
+        content: '';
+        position: absolute;
+        top: -200px; right: -200px;
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(var(--base-color-rgb,255,107,0), .08) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .ot-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -100px; left: -100px;
+        width: 400px; height: 400px;
+        background: radial-gradient(circle, rgba(13,143,255,.06) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+        header nav.navbar {
+            position: relative;
+            z-index: 999;
+        }
+        .navbar-toggler {
+            border-color: rgba(255,255,255,.2);
+        }
+        .navbar-collapse {
+            background: rgba(10,14,26,.98);
+            border-radius: 16px;
+            margin-top: 10px;
+            padding: 16px 14px;
+        }
+        .navbar-nav .nav-link {
+            padding: 10px 0;
+            line-height: 1.4;
+        }
+    }
+
+    /* ===== SEARCH BOX ===== */
+    .ot-search-wrapper {
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 16px;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+    .ot-search-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--base-color,#ff6b00), transparent);
+    }
+    @media(max-width:576px) { .ot-search-wrapper { padding: 24px 20px; } }
+
+    .ot-input-group { display: flex; gap: 12px; align-items: stretch; }
+    @media(max-width:576px) { .ot-input-group { flex-direction: column; } }
+
+    #matriculaInput {
+        background: rgba(255,255,255,.07);
+        border: 2px solid rgba(255,255,255,.15);
+        border-radius: 10px;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 6px;
+        padding: 16px 22px;
+        text-transform: uppercase;
+        flex: 1;
+        min-width: 0;
+        transition: border-color .3s, background .3s;
+    }
+    #matriculaInput::placeholder { color: rgba(255,255,255,.25); letter-spacing: 2px; font-weight: 400; font-size: 15px; }
+    #matriculaInput:focus { outline: none; border-color: var(--base-color,#ff6b00); background: rgba(255,255,255,.1); }
+    @media(max-width:576px) { #matriculaInput { font-size:16px; letter-spacing:3px; padding:14px 16px; } }
+
+    /* ===== LOADING ===== */
+    .ot-loading { text-align: center; padding: 50px 20px; }
+    .ot-spinner {
+        width: 48px; height: 48px;
+        border: 3px solid rgba(255,255,255,.08);
+        border-top-color: var(--base-color,#ff6b00);
+        border-radius: 50%;
+        animation: spin .8s linear infinite;
+        margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin-icon { display: inline-block; animation: spin .8s linear infinite; }
+
+    /* ===== RESULT CARD ===== */
+    .ot-result-card {
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 14px;
+        margin-top: 28px;
+        overflow: hidden;
+        animation: slideUp .4s ease forwards;
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .ot-result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 24px;
+        background: rgba(255,255,255,.06);
+        border-bottom: 1px solid rgba(255,255,255,.1);
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .ot-num-label { font-size: 11px; color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
+    .ot-num-val  { font-size: 20px; font-weight: 800; color: #fff; }
+
+    /* Estado badges */
+    .ot-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 12px; font-weight: 700; padding: 6px 16px;
+        border-radius: 30px; text-transform: uppercase; letter-spacing: .5px;
+    }
+    .ot-badge-listo    { background: rgba(39,174,96,.18);  color: #2ecc71; border: 1px solid rgba(39,174,96,.35); }
+    .ot-badge-proceso  { background: rgba(52,152,219,.18); color: #3498db; border: 1px solid rgba(52,152,219,.35); }
+    .ot-badge-espera   { background: rgba(243,156,18,.18); color: #f39c12; border: 1px solid rgba(243,156,18,.35); }
+    .ot-badge-entregado{ background: rgba(142,68,173,.18); color: #9b59b6; border: 1px solid rgba(142,68,173,.35); }
+    .ot-badge-default  { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); border: 1px solid rgba(255,255,255,.2); }
+
+    .ot-result-body { padding: 28px 24px; }
+    @media(max-width:576px) { .ot-result-body { padding: 20px 18px; } }
+
+    /* Info sections inside card */
+    .ot-section-title {
+        font-size: 11px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 1.5px; color: rgba(255,255,255,.35);
+        display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+    }
+    .ot-section-title::after {
+        content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.08);
+    }
+
+    .ot-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    @media(max-width:480px) { .ot-grid { grid-template-columns: 1fr 1fr; } }
+
+    .ot-field { }
+    .ot-field-label {
+        font-size: 10px; font-weight: 600; text-transform: uppercase;
+        letter-spacing: 1px; color: rgba(255,255,255,.4); display: block; margin-bottom: 5px;
+    }
+    .ot-field-value {
+        font-size: 15px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;
+    }
+    .ot-field-value.accent { color: var(--base-color, #ff6b00); font-size: 20px; font-weight: 800; }
+    .ot-field-value.green  { color: #2ecc71; }
+    .ot-field-value.blue   { color: #3498db; }
+    .ot-field-value.purple { color: #9b59b6; }
+
+    /* Car highlight block */
+    .ot-car-block {
+        display: flex; align-items: center; gap: 18px;
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-bottom: 24px;
+    }
+    .ot-car-icon {
+        width: 52px; height: 52px; border-radius: 12px;
+        background: rgba(255,255,255,.07);
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        font-size: 24px;
+    }
+    .ot-car-plate {
+        display: inline-flex; align-items: center;
+        background: #fff; color: #0a0e1a;
+        font-weight: 900; font-size: 18px; letter-spacing: 4px;
+        padding: 5px 16px; border-radius: 6px;
+        border: 3px solid rgba(0,0,0,.15);
+        margin-top: 4px;
+    }
+
+    /* Dates row */
+    .ot-dates-row {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+        margin-bottom: 24px;
+    }
+    @media(max-width:480px) { .ot-dates-row { grid-template-columns: 1fr; } }
+
+    .ot-date-box {
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 10px;
+        padding: 16px 18px;
+        position: relative;
+        overflow: hidden;
+    }
+    .ot-date-box.completed { border-color: rgba(39,174,96,.25); background: rgba(39,174,96,.05); }
+    .ot-date-box-icon {
+        position: absolute; right: 14px; top: 50%;
+        transform: translateY(-50%);
+        font-size: 28px; opacity: .08;
+    }
+
+    /* Work / observations */
+    .ot-work-block {
+        background: rgba(255,255,255,.03);
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-bottom: 24px;
+    }
+    .ot-work-text { color: rgba(255,255,255,.75); font-size: 14px; line-height: 1.7; margin: 0; }
+
+    /* Price total bar */
+    .ot-price-bar {
+        display: flex; justify-content: space-between; align-items: center;
+        background: rgba(255,255,255,.06);
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 10px;
+        padding: 18px 22px;
+    }
+    .ot-price-label { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .ot-price-amount { font-size: 28px; font-weight: 800; color: #fff; }
+    .ot-price-currency { font-size: 14px; color: rgba(255,255,255,.4); margin-left: 5px; }
+
+    /* Status legend cards */
+    .status-legend-card {
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 12px;
+        padding: 18px 14px;
+        text-align: center;
+        transition: all .3s;
+    }
+    .status-legend-card:hover { background: rgba(255,255,255,.08); transform: translateY(-3px); }
+
+    /* Alert styles */
+    .ot-alert {
+        display: flex; align-items: flex-start; gap: 12px;
+        padding: 18px 20px; border-radius: 10px; margin-top: 20px;
+        animation: slideUp .3s ease forwards;
+    }
+    .ot-alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .ot-alert-warning { background: rgba(243,156,18,.1); border: 1px solid rgba(243,156,18,.25); color: #f39c12; }
+    .ot-alert-danger  { background: rgba(231,76,60,.1);  border: 1px solid rgba(231,76,60,.25);  color: #e74c3c; }
+    .ot-alert-text    { font-size: 14px; line-height: 1.6; }
+    .ot-alert-text strong { color: #fff; }
+
+    /* Contact info cards - same as index */
+    .contact-info-card {
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 12px;
+        padding: 24px 20px;
+        text-align: center;
+        transition: all .3s;
+        height: 100%;
+    }
+    .contact-info-card:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); transform: translateY(-3px); }
+
+    /* Map */
+    .map-wrapper { border-radius: 14px; overflow: hidden; border: 2px solid rgba(255,255,255,.1); box-shadow: 0 8px 32px rgba(0,0,0,.4); height: 400px; }
+    .map-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
+    @media(max-width:768px) { .map-wrapper { height: 280px; } }
+
+    /* Section helpers */
+    @media(max-width:576px) {
+        section { padding-top: 60px !important; padding-bottom: 60px !important; }
+    }
+
+    /* Mobile improvements */
+    @media (max-width: 992px) {
+        .ot-search-wrapper { padding: 32px 26px; }
+        .ot-hero { padding: 100px 0 60px; }
+        .ot-hero h1 { font-size: 42px !important; line-height: 1.05 !important; }
+        .ot-price-bar { flex-wrap: wrap; gap: 12px; }
+        .ot-price-amount { font-size: 24px; }
+        .ot-car-block { flex-wrap: wrap; justify-content: space-between; }
+        .ot-car-block > div { min-width: 100px; }
+    }
+
+    @media (max-width: 768px) {
+        .ot-search-wrapper { padding: 28px 22px; }
+        .ot-result-body { padding: 20px 16px; }
+        .ot-hero { padding: 80px 0 50px; }
+        .ot-hero h1 { font-size: 36px !important; }
+        #matriculaInput { font-size: 18px; letter-spacing: 3px; }
+        .ot-input-group { gap: 10px; }
+        .ot-input-group button { min-width: 140px; }
+        .ot-car-block { gap: 14px; }
+        .ot-car-icon { width: 48px; height: 48px; font-size: 22px; }
+        .ot-car-plate { font-size: 16px; letter-spacing: 2px; padding: 6px 12px; }
+        .ot-grid { gap: 14px; }
+        .ot-dates-row { gap: 14px; }
+        .ot-date-box { padding: 14px 16px; }
+        .ot-work-block { padding: 16px 18px; }
+        .status-legend-card { padding: 16px 12px; }
+        .whatsapp-tooltip { display: none; }
+    }
+
+    @media (max-width: 576px) {
+        .ot-search-wrapper { padding: 20px 16px; }
+        .ot-input-group { flex-direction: column; gap: 12px; }
+        .ot-input-group button { width: 100%; }
+        .ot-search-wrapper { border-radius: 14px; }
+        .ot-hero { padding: 70px 0 40px; }
+        .ot-hero h1 { font-size: 30px !important; line-height: 1.1 !important; }
+        .ot-hero p { font-size: 15px; }
+        #matriculaInput { font-size: 16px; letter-spacing: 2px; padding: 14px 16px; }
+        .ot-result-header { padding: 16px 18px; }
+        .ot-result-body { padding: 18px 16px; }
+        .ot-grid { grid-template-columns: 1fr; }
+        .ot-dates-row { grid-template-columns: 1fr; }
+        .ot-price-bar { flex-direction: column; align-items: flex-start; padding: 16px 18px; }
+        .ot-price-amount { font-size: 22px; }
+        .ot-work-text, .ot-alert-text, .ot-empty-sub { font-size: 14px; }
+        .status-legend-card { min-height: auto; }
+        .map-wrapper { height: 240px; }
+        .whatsapp-float { width: 52px; height: 52px; bottom: 18px; right: 18px; }
+        .whatsapp-float svg { width: 28px; height: 28px; }
+        .footer-navbar { display: grid; gap: 10px; justify-items: center; }
+        .row.row-cols-3 { --bs-columns: 1; }
+    }
+
+    @media (max-width: 992px) {
+        .row.row-cols-3 { --bs-columns: 2; }
+    }
+
+    /* No result empty state */
+    .ot-empty {
+        text-align: center;
+        padding: 50px 20px;
+        animation: slideUp .4s ease forwards;
+    }
+    .ot-empty-icon { font-size: 56px; opacity: .15; display: block; margin-bottom: 16px; }
+    .ot-empty-title { font-size: 18px; color: #fff; font-weight: 600; margin-bottom: 8px; }
+    .ot-empty-sub   { font-size: 14px; color: rgba(255,255,255,.5); }
+    </style>
+</head>
+<body data-mobile-nav-style="classic">
+
+<!-- ===== WHATSAPP FLOTANTE ===== -->
+<a href="https://wa.me/51946359204?text=Hola%20Mancuria,%20quiero%20consultar%20sobre..." target="_blank" class="whatsapp-float" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
+<div class="whatsapp-tooltip">Escribenos por WhatsApp</div>
+
+<!-- ===== HEADER (identical to index) ===== -->
+<header>
+    <nav class="navbar navbar-expand-lg header-transparent bg-transparent disable-fixed">
+        <div class="container-fluid">
+            <div class="col-auto col-lg-2 me-lg-0 me-auto">
+                <a class="navbar-brand" href="index.html">
+                    <span class="alt-font fw-800 fs-22 text-white default-logo" style="letter-spacing:-1px">MANCURIA</span>
+                    <span class="alt-font fw-800 fs-22 alt-logo" style="letter-spacing:-1px;color:#17161a">MANCURIA</span>
+                    <span class="alt-font fw-800 fs-22 mobile-logo" style="letter-spacing:-1px;color:#17161a">MANCURIA</span>
+                </a>
+            </div>
+            <div class="col-auto menu-order position-static">
+                <button class="navbar-toggler float-start" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-line"></span><span class="navbar-toggler-line"></span>
+                    <span class="navbar-toggler-line"></span><span class="navbar-toggler-line"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav alt-font ls-05px">
+                        <li class="nav-item"><a href="index.html#inicio" class="nav-link">Inicio</a></li>
+                        <li class="nav-item"><a href="index.html#servicios" class="nav-link">Servicios</a></li>
+                        <li class="nav-item"><a href="buscarOT.html" class="nav-link active">Buscar OT</a></li>
+                        <li class="nav-item"><a href="index.html#galeria" class="nav-link">Galeria</a></li>
+                        <li class="nav-item"><a href="index.html#nosotros" class="nav-link">Nosotros</a></li>
+                        <li class="nav-item"><a href="index.html#ubicacion" class="nav-link">Ubicacion</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-auto col-lg-2 text-end xs-ps-0 xs-pe-0">
+                <div class="header-icon">
+                    <div class="header-button">
+                        <a href="https://wa.me/51946359204?text=Hola%20Mancuria," target="_blank" class="btn btn-small text-transform-none btn-transparent-white-light border-1 left-icon btn-rounded fw-500">
+                            <i class="bi bi-whatsapp d-none d-xl-inline-block me-5px"></i>WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- ===== HERO / SEARCH SECTION ===== -->
+<section class="ot-hero bg-dark-midnight-blue" style="background-image:url('images/vertical-line-bg-dark.svg')">
+    <div class="container">
+
+        <!-- Page heading -->
+        <div class="row justify-content-center text-center mb-50px"
+            data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":800,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
+            <div class="col-lg-7">
+                <span class="alt-font fw-600 fs-14 text-uppercase ls-2px d-block mb-18px" style="color:var(--base-color,#ff6b00)">
+                    <i class="bi bi-search me-8px"></i>Seguimiento en tiempo real
+                </span>
+                <h1 class="alt-font text-white fw-500 ls-minus-2px mb-20px" style="font-size:48px;line-height:1.1">
+                    ¿Como esta<br>tu vehiculo?
+                </h1>
+                <p class="opacity-7 fs-17">Ingresa la matricula/placa y consulta el estado de tu Orden de Trabajo al instante.</p>
+            </div>
+        </div>
+
+        <!-- Search box -->
+        <div class="row justify-content-center"
+            data-anime='{"translateY":[40,0],"opacity":[0,1],"duration":1000,"delay":300,"easing":"easeOutQuad"}'>
+            <div class="col-lg-7 col-md-9 col-12">
+                <div class="ot-search-wrapper">
+                    <label class="alt-font text-white fw-600 mb-20px d-block fs-17">
+                        <i class="bi bi-car-front-fill me-10px" style="color:var(--base-color,#ff6b00)"></i>Matricula / Placa del vehiculo
+                    </label>
+                    <div class="ot-input-group">
+                        <input type="text" id="matriculaInput"
+                            placeholder="ABC&minus;123"
+                            maxlength="8"
+                            autocomplete="off"
+                            spellcheck="false"
+                            onkeypress="if(event.key==='Enter') window.buscarOT()" />
+                        <button id="btnBuscarOT" onclick="window.buscarOT()"
+                            class="btn btn-extra-large btn-dark-gray btn-hover-animation btn-rounded">
+                            <span>
+                                <span class="btn-text"><i class="bi bi-search me-8px"></i>Buscar</span>
+                                <span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span>
+                            </span>
+                        </button>
+                    </div>
+                    <p class="opacity-4 fs-12 mt-15px mb-0">
+                        <i class="bi bi-info-circle me-5px"></i>
+                        Solo letras y numeros. Ejemplo: <strong class="text-white">ABC123</strong> o <strong class="text-white">1WE-SDX</strong>
+                    </p>
+
+                    <!-- Result area -->
+                    <div id="otResultado"></div>
+                </div>
+
+                <!-- Status legend -->
+                <div class="row row-cols-3 g-3 mt-20px text-center"
+                    data-anime='{"el":"childs","translateY":[20,0],"opacity":[0,1],"duration":600,"delay":500,"staggervalue":100,"easing":"easeOutQuad"}'>
+                    <div class="col">
+                        <div class="status-legend-card">
+                            <i class="bi bi-gear-fill fs-24 d-block mb-8px" style="color:#3498db"></i>
+                            <span class="alt-font text-white fw-600 fs-13 d-block">En Proceso</span>
+                            <span class="opacity-5 fs-11">Trabajando en tu auto</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="status-legend-card">
+                            <i class="bi bi-clock-fill fs-24 d-block mb-8px" style="color:#f39c12"></i>
+                            <span class="alt-font text-white fw-600 fs-13 d-block">En Espera</span>
+                            <span class="opacity-5 fs-11">Esperando repuesto</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="status-legend-card">
+                            <i class="bi bi-check-circle-fill fs-24 d-block mb-8px" style="color:#2ecc71"></i>
+                            <span class="alt-font text-white fw-600 fs-13 d-block">Listo</span>
+                            <span class="opacity-5 fs-11">Puede retirar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA (same as index) ===== -->
+<section class="bg-dark-midnight-blue" style="background-image:url('images/lab-emprende-page-bg.jpg')" data-parallax-background-ratio="0.3">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 text-center last-paragraph-no-margin">
+                <h2 class="alt-font text-white fw-500 mb-15px ls-minus-2px">Listo para traer tu vehiculo?</h2>
+                <p class="opacity-7 fs-17 mb-35px">Visitanos en Chincha o escribenos ahora. Diagnostico rapido y preciso desde la primera visita.</p>
+                <div class="cta-actions d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="https://wa.me/51946359204?text=Hola%20Mancuria,%20quiero%20agendar%20una%20cita" target="_blank"
+                        class="btn btn-extra-large btn-base-color btn-hover-animation btn-rounded btn-box-shadow align-self-center">
+                        <span><span class="btn-text"><i class="bi bi-whatsapp me-10px"></i>Agendar por WhatsApp</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
+                    </a>
+                    <a href="index.html#servicios" class="btn btn-extra-large btn-dark-gray btn-hover-animation btn-rounded btn-box-shadow align-self-center">
+                        <span><span class="btn-text"><i class="bi bi-wrench me-10px"></i>Ver Servicios</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER (identical to index) ===== -->
+<footer class="bg-dark-midnight-blue" style="background-image:url('images/lab-emprende-about-bg.png');background-position:right top;background-repeat:no-repeat">
+    <div class="container">
+        <div class="row justify-content-center text-center text-sm-start g-4">
+            <div class="col-lg-3 col-sm-6">
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-map-pin align-text-bottom icon-extra-medium text-base-color me-10px"></i>Ubicacion</span>
+                <p class="mb-5px fs-14">Av. Jose Olaya 420<br>A una cuadra del local Arco Iris<br>Chincha 11702, Ica, Peru</p>
+                <a href="https://maps.google.com/?q=Av+Jose+Olaya+420+Chincha" target="_blank" class="text-decoration-line-bottom text-uppercase fs-13 alt-font fw-500">Abrir mapa</a>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-phone-call align-text-bottom icon-extra-medium text-base-color me-10px"></i>Contacto</span>
+                <a href="mailto:mancuriaautomotriz@gmail.com" class="d-block mb-5px fs-13" style="word-break:break-all">mancuriaautomotriz@gmail.com</a>
+                <a href="https://wa.me/51946359204" target="_blank" class="mb-5px d-inline-block fs-14">+51 946 359 204</a><br>
+                <a href="https://wa.me/51946359204" target="_blank" class="text-decoration-line-bottom text-uppercase fs-13 alt-font fw-500"><i class="bi bi-whatsapp me-5px"></i>WhatsApp</a>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-clock align-text-bottom icon-extra-medium text-base-color me-10px"></i>Horarios</span>
+                <p class="mb-5px fs-14">Lun &ndash; Vie: 8:00 &ndash; 18:00</p>
+                <p class="mb-5px fs-14">Sabado: 8:00 &ndash; 13:00</p>
+                <p class="mb-5px opacity-5 fs-14">Domingo: Cerrado</p>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-send align-text-bottom icon-extra-medium text-base-color me-10px"></i>Newsletter</span>
+                <p class="mb-20px fs-14">Recibe tips de mantenimiento y novedades</p>
+                <div class="d-inline-block w-100 newsletter-style-01 position-relative">
+                    <form action="email-templates/subscribe-newsletter.php" method="post">
+                        <input class="bg-white input-small border-color-white form-control required" name="email" placeholder="Tu correo electronico" type="email">
+                        <input type="hidden" name="redirect" value="">
+                        <button class="btn btn-small btn-base-color ps-15px pe-15px base-color-hover submit" aria-label="submit"><i class="feather icon-feather-mail m-0 align-middle icon-small text-white"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row align-items-center pt-6 md-pt-40px">
+            <div class="col-lg-3 col-sm-6 text-center text-sm-start">
+                <span class="alt-font fw-800 fs-24 text-white d-block" style="letter-spacing:-1px">MANCURIA</span>
+                <p class="opacity-5 fs-12 mt-4px mb-0">Taller Automotriz Especializado - Chincha, Ica</p>
+            </div>
+            <div class="col-lg-6 order-1 order-sm-3 order-lg-1 md-mt-15px">
+                <ul class="footer-navbar alt-font text-center lh-normal">
+                    <li class="nav-item"><a href="index.html#inicio" class="nav-link">Inicio</a></li>
+                    <li class="nav-item"><a href="index.html#servicios" class="nav-link">Servicios</a></li>
+                    <li class="nav-item"><a href="buscarOT.html" class="nav-link">Buscar OT</a></li>
+                    <li class="nav-item"><a href="index.html#galeria" class="nav-link">Galeria</a></li>
+                    <li class="nav-item"><a href="index.html#ubicacion" class="nav-link">Ubicacion</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-sm-6 order-3 order-sm-2 order-lg-3 text-center text-sm-end xs-mt-10px last-paragraph-no-margin">
+                <p class="fs-13">&copy; 2025 <strong class="text-white">Mancuria</strong> &mdash; Chincha, Ica</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div class="scroll-progress d-none d-xxl-block">
+    <a href="#" class="scroll-top" aria-label="scroll"><span class="scroll-text">Scroll</span><span class="scroll-line"><span class="scroll-point"></span></span></a>
+</div>
+
+<!-- ===== Firebase SDK ===== -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBtRTeIXyY6XAXTFa-t2OGIQfSrUBcZifI",
+        authDomain: "mancuria-automotriz.firebaseapp.com",
+        projectId: "mancuria-automotriz",
+        storageBucket: "mancuria-automotriz.firebasestorage.app",
+        messagingSenderId: "24914455876",
+        appId: "1:24914455876:web:f96a6c7d08876f55d23b11",
+        measurementId: "G-HPVK82FDHG"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    let unsub1 = null, unsub2 = null, lastPlaca = null;
+    const CAPTCHA_KEY = "6LfrlrwsAAAAAGj55n4AnqgPR07iLEnnmywaJv-A";
+
+    // ── helpers ──────────────────────────────────────────
+    function fmt(raw) {
+        if (!raw) return null;
+        // Unix timestamp (ms or s)
+        if (typeof raw === 'number') {
+            const ms = raw > 1e12 ? raw : raw * 1000;
+            return new Date(ms).toLocaleString('es-PE', {
+                day:'2-digit', month:'2-digit', year:'numeric',
+                hour:'2-digit', minute:'2-digit'
+            });
+        }
+        // Firestore Timestamp object
+        if (raw?.toDate) return raw.toDate().toLocaleString('es-PE', {
+            day:'2-digit', month:'2-digit', year:'numeric',
+            hour:'2-digit', minute:'2-digit'
+        });
+        // ISO string
+        if (typeof raw === 'string') {
+            const d = new Date(raw);
+            if (!isNaN(d)) return d.toLocaleString('es-PE', {
+                day:'2-digit', month:'2-digit', year:'numeric',
+                hour:'2-digit', minute:'2-digit'
+            });
+        }
+        return String(raw);
+    }
+
+    function badgeHTML(estado) {
+        const e = (estado || '').toLowerCase();
+        if (e.includes('listo') || e.includes('terminado') || e.includes('completo'))
+            return `<span class="ot-badge ot-badge-listo"><i class="bi bi-check-circle-fill"></i>${estado}</span>`;
+        if (e.includes('proceso') || e.includes('progreso') || e.includes('trabajando'))
+            return `<span class="ot-badge ot-badge-proceso"><i class="bi bi-gear-fill spin-icon"></i>${estado}</span>`;
+        if (e.includes('espera') || e.includes('pendiente') || e.includes('repuesto'))
+            return `<span class="ot-badge ot-badge-espera"><i class="bi bi-clock-fill"></i>${estado}</span>`;
+        if (e.includes('entregado'))
+            return `<span class="ot-badge ot-badge-entregado"><i class="bi bi-bag-check-fill"></i>${estado}</span>`;
+        return `<span class="ot-badge ot-badge-default"><i class="bi bi-circle"></i>${estado}</span>`;
+    }
+
+    function cardHTML(data) {
+        const estado     = data.estado          || 'Sin estado';
+        const cliente    = data.clienteNombre   || data.cliente || '—';
+        const marca      = data.marcaModelo      || data.marca  || '—';
+        const placa      = data.placa           || '—';
+        const km         = data.kilometraje != null ? Number(data.kilometraje).toLocaleString('es-PE') + ' km' : '—';
+        const falla      = data.fallaReportada  || data.falla || data.descripcion || '—';
+        const trabajo    = data.trabajoRealizado|| '';
+        const precio     = data.montoTotal      != null ? 'S/ ' + Number(data.montoTotal).toLocaleString('es-PE', {minimumFractionDigits:2}) : null;
+        const fechaIngreso = fmt(data.fechaIngreso || data.fecha_ingreso || data.fechaCreacion || data.fecha_creacion);
+        const fechaEntrega = fmt(data.fechaEntrega || data.fecha_entrega || data.fechaSalida || data.fechaActualizacion || data.fecha_actualizacion);
+
+        // Decide color for monto
+        const isCompleted = ['listo','terminado','completo','entregado'].some(k => estado.toLowerCase().includes(k));
+        const estadoClass = isCompleted ? 'green' : estado.toLowerCase().includes('proceso') ? 'blue' : '';
+
+        return `
+        <div class="ot-result-card">
+            <!-- Header: OT number + badge -->
+            <div class="ot-result-header">
+                <div>
+                    <span class="ot-num-label">Orden de Trabajo</span>
+                    <span class="ot-num-val">#${data.numero_ot || data.numeroOT || data.id || '—'}</span>
+                </div>
+                ${badgeHTML(estado)}
+            </div>
+
+            <div class="ot-result-body">
+
+                <!-- Car highlight -->
+                <div class="ot-car-block">
+                    <div class="ot-car-icon">&#x1F697;</div>
+                    <div style="flex:1">
+                        <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">${marca}</div>
+                        <div class="ot-car-plate">${placa}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Kilometraje</div>
+                        <div style="font-size:20px;font-weight:700;color:#fff">${km}</div>
+                    </div>
+                </div>
+
+                <!-- Cliente + estado -->
+                <p class="ot-section-title"><i class="bi bi-person-circle"></i>Cliente</p>
+                <div class="ot-grid" style="margin-bottom:24px">
+                    <div class="ot-field">
+                        <span class="ot-field-label">Nombre</span>
+                        <span class="ot-field-value"><i class="bi bi-person-fill" style="opacity:.4"></i>${cliente}</span>
+                    </div>
+                    <div class="ot-field">
+                        <span class="ot-field-label">Estado actual</span>
+                        <span class="ot-field-value ${estadoClass}">${estado}</span>
+                    </div>
+                </div>
+
+                <!-- Dates -->
+                <p class="ot-section-title"><i class="bi bi-calendar3"></i>Fechas</p>
+                <div class="ot-dates-row">
+                    <div class="ot-date-box">
+                        <span class="ot-field-label">Fecha de Ingreso</span>
+                        <span class="ot-field-value" style="font-size:14px">
+                            <i class="bi bi-calendar-check" style="color:var(--base-color,#ff6b00)"></i>
+                            ${fechaIngreso || '<span style="opacity:.4">No disponible</span>'}
+                        </span>
+                        <i class="bi bi-box-arrow-in-right ot-date-box-icon"></i>
+                    </div>
+                    <div class="ot-date-box ${isCompleted ? 'completed' : ''}">
+                        <span class="ot-field-label">Fecha de Entrega</span>
+                        <span class="ot-field-value" style="font-size:14px">
+                            <i class="bi bi-calendar-check-fill" style="color:${isCompleted ? '#2ecc71' : 'rgba(255,255,255,.3)'}"></i>
+                            ${isCompleted && fechaEntrega
+                                ? `<span style="color:#2ecc71">${fechaEntrega}</span>`
+                                : '<span style="opacity:.4">Pendiente</span>'}
+                        </span>
+                        <i class="bi bi-box-arrow-right ot-date-box-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Falla / trabajo -->
+                <p class="ot-section-title"><i class="bi bi-tools"></i>Servicio</p>
+                <div class="ot-work-block">
+                    ${falla !== '—' ? `
+                    <div style="margin-bottom:${trabajo ? '14px' : '0'}">
+                        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);display:block;margin-bottom:6px">Falla reportada</span>
+                        <p class="ot-work-text"><i class="bi bi-exclamation-circle me-8px" style="color:var(--base-color,#ff6b00)"></i>${falla}</p>
+                    </div>` : ''}
+                    ${trabajo ? `
+                    <div>
+                        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);display:block;margin-bottom:6px">Trabajo realizado</span>
+                        <p class="ot-work-text"><i class="bi bi-check2-circle me-8px" style="color:#2ecc71"></i>${trabajo}</p>
+                    </div>` : ''}
+                </div>
+
+                <!-- Price -->
+                ${precio ? `
+                <div class="ot-price-bar">
+                    <div>
+                        <span class="ot-price-label"><i class="bi bi-receipt me-8px"></i>Total del servicio</span>
+                    </div>
+                    <div>
+                        <span class="ot-price-amount">${precio}</span>
+                        <span class="ot-price-currency">PEN</span>
+                    </div>
+                </div>` : ''}
+
+            </div><!-- /.ot-result-body -->
+        </div>`;
+    }
+
+    // ── main search function ──────────────────────────────
+    window.buscarOT = async function() {
+        const raw = document.getElementById('matriculaInput').value.trim().toUpperCase();
+        const matricula = raw.replace(/[^A-Z0-9]/g, '');
+        const result    = document.getElementById('otResultado');
+        const btn       = document.getElementById('btnBuscarOT');
+
+        if (!matricula) {
+            result.innerHTML = `<div class="ot-alert ot-alert-warning">
+                <i class="bi bi-exclamation-circle ot-alert-icon"></i>
+                <span class="ot-alert-text">Por favor ingresa la matricula de tu vehiculo.</span>
+            </div>`;
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<span><span class="btn-text"><span class="spin-icon">&#x21BB;</span> Validando...</span></span>';
+        result.innerHTML = '';
+
+        try {
+            // reCAPTCHA v3
+            await new Promise(res => grecaptcha.ready(res));
+            await grecaptcha.execute(CAPTCHA_KEY, { action: 'buscar_ot' });
+
+            if (unsub1) unsub1();
+            if (unsub2) unsub2();
+
+            btn.innerHTML = '<span><span class="btn-text"><span class="spin-icon">&#x21BB;</span> Buscando...</span></span>';
+            result.innerHTML = `<div class="ot-loading">
+                <div class="ot-spinner"></div>
+                <p class="text-white mt-15px opacity-7">Consultando ordenes de trabajo...</p>
+            </div>`;
+
+            lastPlaca = matricula;
+            const withDash = matricula.length > 3
+                ? matricula.slice(0,3) + '-' + matricula.slice(3)
+                : matricula;
+
+            let allDocs = {};
+            let resolved = false;
+
+            function render() {
+                resolved = true;
+                btn.disabled = false;
+                btn.innerHTML = '<span><span class="btn-text"><i class="bi bi-search me-8px"></i>Buscar</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>';
+                if (Object.keys(allDocs).length === 0) return;
+                result.innerHTML = Object.entries(allDocs).map(([,d]) => cardHTML(d)).join('');
+            }
+
+            unsub1 = onSnapshot(
+                query(collection(db,'ordenes_trabajo'), where('placa','==', matricula)),
+                snap => { snap.forEach(d => { allDocs[d.id] = {...d.data(), _docId: d.id}; }); render(); }
+            );
+            unsub2 = onSnapshot(
+                query(collection(db,'ordenes_trabajo'), where('placa','==', withDash)),
+                snap => { snap.forEach(d => { allDocs[d.id] = {...d.data(), _docId: d.id}; }); render(); }
+            );
+
+            // Timeout: no results
+            setTimeout(() => {
+                if (!resolved || Object.keys(allDocs).length === 0) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span><span class="btn-text"><i class="bi bi-search me-8px"></i>Buscar</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>';
+                    result.innerHTML = `<div class="ot-empty">
+                        <i class="bi bi-search ot-empty-icon"></i>
+                        <div class="ot-empty-title">No se encontraron ordenes</div>
+                        <div class="ot-empty-sub">No hay OT registradas para la placa <strong style="color:#fff">${raw || matricula}</strong>.<br>Verifica la matricula o contactanos por WhatsApp.</div>
+                        <a href="https://wa.me/51946359204?text=Hola%20Mancuria,%20consulto%20por%20la%20placa%20${matricula}" target="_blank"
+                            class="btn btn-dark-gray btn-rounded mt-20px">
+                            <i class="bi bi-whatsapp me-8px" style="color:#25D366"></i>Consultar por WhatsApp
+                        </a>
+                    </div>`;
+                }
+            }, 3500);
+
+        } catch (err) {
+            console.error(err);
+            btn.disabled = false;
+            btn.innerHTML = '<span><span class="btn-text"><i class="bi bi-search me-8px"></i>Buscar</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>';
+            result.innerHTML = `<div class="ot-alert ot-alert-danger">
+                <i class="bi bi-exclamation-triangle ot-alert-icon"></i>
+                <span class="ot-alert-text">Error al consultar. Por favor intenta nuevamente.</span>
+            </div>`;
+        }
+    };
+
+    // Pre-fill from URL param
+    window.addEventListener('DOMContentLoaded', () => {
+        const p = new URLSearchParams(window.location.search).get('placa');
+        if (p) {
+            document.getElementById('matriculaInput').value = decodeURIComponent(p);
+            window.buscarOT();
+        }
+    });
+</script>
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/vendors.min.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
