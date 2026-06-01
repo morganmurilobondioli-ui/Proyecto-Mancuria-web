@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="description" content="Taller automotriz especializado en diagnostico electronico avanzado, programacion de modulos ECU, afinamiento y mantenimiento en Chincha, Ica, Peru.">
+    <meta name="description" content="Taller automotriz especializado en diagnóstico electrónico avanzado, programación de módulos ECU, afinamiento y mantenimiento en Chincha, Ica, Perú.">
     <meta name="theme-color" content="#0d1117">
     <link rel="shortcut icon" href="images/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -220,7 +220,7 @@
     .ot-input-group { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }
     #matriculaInput { background: rgba(255,255,255,.1); border: 2px solid rgba(255,255,255,.2); border-radius: 8px; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 5px; padding: 14px 20px; text-transform: uppercase; flex: 1; min-width: 160px; transition: border-color .3s; }
     #matriculaInput::placeholder { color: rgba(255,255,255,.35); letter-spacing: 2px; font-weight: 400; font-size: 15px; }
-    #matriculaInput:focus { outline: none; border-color: var(--base-color,#ff6b00); }
+    #matriculaInput:focus { outline: none; border-color: var(--base-color,#e5092d); }
     @media(max-width:576px) { #matriculaInput { font-size:16px; letter-spacing:3px; padding:12px 16px; } }
     .ot-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 10px; margin-top: 20px; overflow: hidden; transition: transform .2s, box-shadow .2s; }
     .ot-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,.3); }
@@ -229,8 +229,8 @@
     .ot-value { color: #fff; font-size: 18px; font-weight: 700; margin-left: 6px; }
     .ot-estado { font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: .5px; }
     .estado-listo { background: rgba(39,174,96,.2); color: #2ecc71; border: 1px solid rgba(39,174,96,.4); }
-    .estado-proceso { background: rgba(52,152,219,.2); color: #3498db; border: 1px solid rgba(52,152,219,.4); }
-    .estado-espera { background: rgba(243,156,18,.2); color: #f39c12; border: 1px solid rgba(243,156,18,.4); }
+    .estado-proceso { background: rgba(229,9,45,.16); color: #ff4d63; border: 1px solid rgba(229,9,45,.34); }
+    .estado-espera { background: rgba(229,9,45,.16); color: #ff4d63; border: 1px solid rgba(229,9,45,.34); }
     .ot-card-body { padding: 20px; }
     .ot-info-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 14px; margin-bottom: 14px; }
     .ot-info-label { font-size: 11px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 3px; }
@@ -241,7 +241,7 @@
     .ot-results-header { font-size: 15px; color: rgba(255,255,255,.7); padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.1); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .ot-count { background: rgba(255,255,255,.1); border-radius: 20px; padding: 2px 10px; font-size: 12px; margin-left: auto; }
     .ot-loading { text-align: center; padding: 40px; }
-    .ot-spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,.1); border-top-color: var(--base-color,#ff6b00); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto; }
+    .ot-spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,.1); border-top-color: var(--base-color,#e5092d); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .spin-icon { display: inline-block; animation: spin .8s linear infinite; }
 
@@ -284,6 +284,7 @@
         .ot-info-grid { grid-template-columns: 1fr 1fr; }
     }
     </style>
+    <link rel="stylesheet" href="css/mancuria-ui.css"/>
 </head>
 <body data-mobile-nav-style="classic">
 
@@ -293,17 +294,15 @@
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
     </svg>
 </a>
-<div class="whatsapp-tooltip">Escribenos por WhatsApp</div>
+<div class="whatsapp-tooltip">Escríbenos por WhatsApp</div>
 
-<!-- ===== HEADER ===== -->
+<!-- ===== HEADER (identical to index) ===== -->
 <header>
     <nav class="navbar navbar-expand-lg header-transparent bg-transparent disable-fixed">
         <div class="container-fluid">
             <div class="col-auto col-lg-2 me-lg-0 me-auto">
                 <a class="navbar-brand" href="index.html">
-                    <span class="alt-font fw-800 fs-22 text-white default-logo" style="letter-spacing:-1px">MANCURIA</span>
-                    <span class="alt-font fw-800 fs-22 alt-logo" style="letter-spacing:-1px;color:#17161a">MANCURIA</span>
-                    <span class="alt-font fw-800 fs-22 mobile-logo" style="letter-spacing:-1px;color:#17161a">MANCURIA</span>
+                    <img src="images/mancuria-logo-final-nav.png" alt="Mancuria" class="brand-logo">
                 </a>
             </div>
             <div class="col-auto menu-order position-static">
@@ -313,20 +312,20 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav alt-font ls-05px">
-                        <li class="nav-item"><a href="#inicio" class="nav-link">Inicio</a></li>
-                        <li class="nav-item"><a href="#servicios" class="nav-link">Servicios</a></li>
-                        <li class="nav-item"><a href="buscarOT.html" class="nav-link">Buscar OT</a></li>
-                        <li class="nav-item"><a href="#galeria" class="nav-link">Galeria</a></li>
-                        <li class="nav-item"><a href="#nosotros" class="nav-link">Nosotros</a></li>
-                        <li class="nav-item"><a href="#ubicacion" class="nav-link">Ubicacion</a></li>
+                        <li class="nav-item"><a href="index.html#inicio" class="nav-link">Inicio</a></li>
+                        <li class="nav-item"><a href="index.html#servicios" class="nav-link">Servicios</a></li>
+                        <li class="nav-item"><a href="buscarOT.html" class="nav-link active">Buscar OT</a></li>
+                        <li class="nav-item"><a href="index.html#galeria" class="nav-link">Galería</a></li>
+                        <li class="nav-item"><a href="index.html#nosotros" class="nav-link">Nosotros</a></li>
+                        <li class="nav-item"><a href="index.html#ubicacion" class="nav-link">Ubicación</a></li>
                     </ul>
                 </div>
             </div>
             <div class="col-auto col-lg-2 text-end xs-ps-0 xs-pe-0">
                 <div class="header-icon">
                     <div class="header-button">
-                        <a href="buscarOT.html" class="btn btn-small text-transform-none btn-transparent-white-light border-1 left-icon btn-rounded fw-500">
-                            <i class="bi bi-search d-none d-xl-inline-block me-5px"></i>Buscar OT
+                        <a href="https://wa.me/51946359204?text=Hola%20Mancuria," target="_blank" class="btn btn-small text-transform-none btn-transparent-white-light border-1 left-icon btn-rounded fw-500">
+                            <i class="bi bi-whatsapp d-none d-xl-inline-block me-5px"></i>WhatsApp
                         </a>
                     </div>
                 </div>
@@ -343,18 +342,20 @@
             <div class="col-md-12 position-relative text-white d-flex flex-column justify-content-center text-center h-100">
                 <span class="alt-font hero-title-outline fs-225 lg-fs-190 md-fs-160 sm-fs-100 xs-fs-70 ls-2px md-ls-1px xs-ls-0px fw-600 text-outline text-outline-width-2px d-inline-block"
                     data-fancy-text='{"string":["Mancuria"],"duration":500,"delay":500,"speed":50,"clipPath":["inset(0 200px 0 0)","inset(0px 0px 0px 0px)"],"easing":"easeOutCubic"}'></span>
+                <img src="images/mancuria-logo-final-hero.png" alt="Mancuria Mantenimiento Automotriz" class="hero-brand-logo"
+                    data-anime='{"opacity":[0,1],"translateY":[20,0],"easing":"easeOutCubic","duration":900,"delay":600}'>
                 <span class="alt-font hero-subtitle fs-50 md-fs-36 xs-fs-22 position-relative top-minus-40px lg-top-minus-20px xs-top-minus-5px text-white fw-400"
                     data-anime='{"opacity":[0,1],"easing":"easeOutQuad","duration":1000,"delay":800}'>
                     Taller Automotriz Especializado
                 </span>
                 <p class="hero-desc text-white opacity-8 fs-17 md-fs-15 mb-35px mt-minus-20px"
                     data-anime='{"opacity":[0,1],"translateY":[15,0],"easing":"easeOutCubic","duration":1000,"delay":900}'>
-                    Diagnostico electronico avanzado &bull; Programacion de modulos ECU &bull; Afinamiento y Mantenimiento
+                    Diagnóstico electrónico avanzado &bull; Programación de módulos ECU &bull; Afinamiento y mantenimiento
                 </p>
                 <div class="hero-actions d-flex gap-3 justify-content-center flex-wrap"
                     data-anime='{"opacity":[0,1],"translateY":[40,0],"easing":"easeOutCubic","duration":1000,"delay":1000}'>
                     <a href="buscarOT.html" class="btn btn-extra-large btn-dark-gray btn-hover-animation btn-rounded btn-box-shadow align-self-center">
-                        <span><span class="btn-text"><i class="bi bi-search me-10px"></i>Ver estado de mi vehiculo</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
+                        <span><span class="btn-text"><i class="bi bi-search me-10px"></i>Ver estado de mi vehículo</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
                     </a>
                     <a href="#servicios" class="btn btn-extra-large btn-transparent-white-light border-1 btn-rounded align-self-center">
                         <span><span class="btn-text">Ver servicios</span><span class="btn-icon"><i class="fa-solid fa-arrow-down"></i></span></span>
@@ -363,7 +364,7 @@
                 <div class="position-absolute bottom-60px md-bottom-40px xs-bottom-20px left-0px right-0px"
                     data-anime='{"opacity":[0,1],"translateY":[15,0],"easing":"easeOutCubic","duration":1000,"delay":1200}'>
                     <span class="alt-font text-uppercase fw-500 ls-1px fs-14">
-                        <i class="feather icon-feather-map-pin icon-small me-5px"></i>Av. Jose Olaya 420, Chincha, Ica &mdash; Peru
+                        <i class="feather icon-feather-map-pin icon-small me-5px"></i>Calle José Olaya 420, Chincha Alta, Ica &mdash; Perú
                     </span>
                 </div>
             </div>
@@ -379,13 +380,13 @@
             <div class="col mb-30px mb-md-0">
                 <div class="feature-box feature-box-left-icon-middle">
                     <div class="feature-box-icon ms-30px me-30px"><h1 class="alt-font text-outline text-outline-width-2px text-outline-color-base-color fw-700 ls-minus-1px mb-0">01</h1></div>
-                    <div class="feature-box-content border-start border-color-transparent-white-light ps-30px pe-30px last-paragraph-no-margin"><span class="text-white fs-22 alt-font d-inline-block fw-300">Diagnostico electronico</span></div>
+                    <div class="feature-box-content border-start border-color-transparent-white-light ps-30px pe-30px last-paragraph-no-margin"><span class="text-white fs-22 alt-font d-inline-block fw-300">Diagnóstico electrónico</span></div>
                 </div>
             </div>
             <div class="col mb-30px mb-md-0">
                 <div class="feature-box feature-box-left-icon-middle">
                     <div class="feature-box-icon ms-30px me-30px"><h1 class="alt-font text-outline text-outline-width-2px text-outline-color-base-color fw-700 ls-minus-1px mb-0">02</h1></div>
-                    <div class="feature-box-content border-start border-color-transparent-white-light ps-30px pe-30px last-paragraph-no-margin"><span class="text-white fs-22 alt-font d-inline-block fw-300">Programacion de modulos</span></div>
+                    <div class="feature-box-content border-start border-color-transparent-white-light ps-30px pe-30px last-paragraph-no-margin"><span class="text-white fs-22 alt-font d-inline-block fw-300">Programación de módulos</span></div>
                 </div>
             </div>
             <div class="col">
@@ -407,11 +408,7 @@
                 <h2 class="alt-font text-white fw-500 ls-minus-2px mb-15px">
                     <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Nuestros Servicios
                 </h2>
-                <p class="opacity-7 fs-16">Tecnologia de diagnostico avanzada para todos los modelos y marcas. Insumos premium Liqui Moly y Wurth.</p>
-                <p class="opacity-4 fs-13 mt-10px">
-                    <i class="bi bi-info-circle me-5px"></i>
-                    Las imagenes de cada servicio se pueden reemplazar con fotos reales del taller
-                </p>
+                <p class="opacity-7 fs-16">Tecnología de diagnóstico avanzada para todos los modelos y marcas. Insumos premium Liqui Moly y Wurth.</p>
             </div>
         </div>
 
@@ -420,18 +417,17 @@
 
             <!-- Servicio 1 -->
             <div class="col">
-                <div class="service-card">
+                <div class="service-card service-card-whatsapp" role="button" tabindex="0" data-service="Diagnóstico avanzado con osciloscopio">
                     <div class="service-card-img">
-                        <!-- REEMPLAZA src con la foto real: <img src="images/servicio-osciloscopio.jpg" alt="Diagnostico Osciloscopio"> -->
+                        <!-- REEMPLAZA src con la foto real: <img src="images/servicio-osciloscopio.jpg" alt="Diagnóstico con osciloscopio"> -->
                         <div class="service-card-img-placeholder text-white">
                             <i class="bi bi-activity"></i>
-                            <span>Foto del servicio</span>
-                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                            <span>Diagnóstico electrónico</span>
                         </div>
                     </div>
                     <div class="service-card-body">
-                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Diagnostico Avanzado con Osciloscopio</h5>
-                        <p class="opacity-7 fs-14 mb-15px">Nuestro diagnostico con osciloscopio obtiene resultados precisos de la condicion electrica y electronica de tu vehiculo.</p>
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Diagnóstico avanzado con osciloscopio</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Nuestro diagnóstico con osciloscopio obtiene resultados precisos de la condición eléctrica y electrónica de tu vehículo.</p>
                         <div class="service-card-price">S/ 380.00 <span>PEN</span></div>
                     </div>
                 </div>
@@ -439,17 +435,16 @@
 
             <!-- Servicio 2 -->
             <div class="col">
-                <div class="service-card">
+                <div class="service-card service-card-whatsapp" role="button" tabindex="0" data-service="Mantenimiento + afinamiento electrónico">
                     <div class="service-card-img">
                         <div class="service-card-img-placeholder text-white">
                             <i class="bi bi-tools"></i>
-                            <span>Foto del servicio</span>
-                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                            <span>Mantenimiento premium</span>
                         </div>
                     </div>
                     <div class="service-card-body">
-                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Mantenimiento + Afinamiento Electronico</h5>
-                        <p class="opacity-7 fs-14 mb-15px">Servicio de mantenimiento mayor y afinamiento electronico con insumos de primera linea Liqui Moly y Wurth.</p>
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Mantenimiento + afinamiento electrónico</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Servicio de mantenimiento mayor y afinamiento electrónico con insumos de primera línea Liqui Moly y Wurth.</p>
                         <div class="service-card-price">S/ 450.00 <span>PEN</span></div>
                     </div>
                 </div>
@@ -457,17 +452,16 @@
 
             <!-- Servicio 3 -->
             <div class="col">
-                <div class="service-card">
+                <div class="service-card service-card-whatsapp" role="button" tabindex="0" data-service="Programación de llaves con chip">
                     <div class="service-card-img">
                         <div class="service-card-img-placeholder text-white">
                             <i class="bi bi-key-fill"></i>
-                            <span>Foto del servicio</span>
-                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                            <span>Llaves con chip</span>
                         </div>
                     </div>
                     <div class="service-card-body">
-                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Programacion de Llaves con Chip</h5>
-                        <p class="opacity-7 fs-14 mb-15px">Trabajamos en los siguientes modulos: Inmovilizadores, ECU y llaves transponder para todas las marcas.</p>
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Programación de llaves con chip</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Trabajamos con módulos de inmovilizador, ECU y llaves transponder para distintas marcas.</p>
                         <div class="service-card-price">S/ 300.00 <span>PEN</span></div>
                     </div>
                 </div>
@@ -475,12 +469,11 @@
 
             <!-- Servicio 4 -->
             <div class="col">
-                <div class="service-card">
+                <div class="service-card service-card-whatsapp" role="button" tabindex="0" data-service="Limpieza de tanques">
                     <div class="service-card-img">
                         <div class="service-card-img-placeholder text-white">
                             <i class="bi bi-droplet-fill"></i>
-                            <span>Foto del servicio</span>
-                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                            <span>Sistema de combustible</span>
                         </div>
                     </div>
                     <div class="service-card-body">
@@ -493,17 +486,16 @@
 
             <!-- Servicio 5 -->
             <div class="col">
-                <div class="service-card">
+                <div class="service-card service-card-whatsapp" role="button" tabindex="0" data-service="Rectificación de discos">
                     <div class="service-card-img">
                         <div class="service-card-img-placeholder text-white">
                             <i class="bi bi-circle"></i>
-                            <span>Foto del servicio</span>
-                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                            <span>Frenos y seguridad</span>
                         </div>
                     </div>
                     <div class="service-card-body">
-                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Rectificacion de Discos</h5>
-                        <p class="opacity-7 fs-14 mb-15px">Hacemos rectificacion de discos de freno, revisamos y calibramos para garantizar la seguridad de tu vehiculo.</p>
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Rectificación de discos</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Realizamos rectificación de discos de freno, revisión y calibración para garantizar la seguridad de tu vehículo.</p>
                         <div class="service-card-price">S/ 150.00 <span>PEN</span></div>
                     </div>
                 </div>
@@ -511,17 +503,16 @@
 
             <!-- Servicio 6 -->
             <div class="col">
-                <div class="service-card">
+                <div class="service-card service-card-whatsapp" role="button" tabindex="0" data-service="Afinamiento electrónico automotriz">
                     <div class="service-card-img">
                         <div class="service-card-img-placeholder text-white">
                             <i class="bi bi-cpu-fill"></i>
-                            <span>Foto del servicio</span>
-                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                            <span>Afinamiento electrónico</span>
                         </div>
                     </div>
                     <div class="service-card-body">
-                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Afinamiento Electronico Automotriz</h5>
-                        <p class="opacity-7 fs-14 mb-15px">Realiza tu afinamiento electronico y evita desgastes prematuros. Mejora el rendimiento y consumo de combustible.</p>
+                        <h5 class="alt-font text-white fw-600 mb-10px fs-17">Afinamiento electrónico automotriz</h5>
+                        <p class="opacity-7 fs-14 mb-15px">Realiza tu afinamiento electrónico y evita desgastes prematuros. Mejora el rendimiento y consumo de combustible.</p>
                         <div class="service-card-price">S/ 300.00 <span>PEN</span></div>
                     </div>
                 </div>
@@ -529,12 +520,11 @@
 
             <!-- Servicio 7 -->
             <div class="col">
-                <div class="service-card">
+                <div class="service-card service-card-whatsapp" role="button" tabindex="0" data-service="Mantenimiento automotriz">
                     <div class="service-card-img">
                         <div class="service-card-img-placeholder text-white">
                             <i class="bi bi-wrench-adjustable"></i>
-                            <span>Foto del servicio</span>
-                            <div class="upload-hint"><i class="bi bi-camera"></i> Agregar foto</div>
+                            <span>Mantenimiento automotriz</span>
                         </div>
                     </div>
                     <div class="service-card-body">
@@ -547,31 +537,19 @@
 
         </div>
 
-        <!-- Instrucciones para agregar fotos -->
-        <div class="row justify-content-center mt-40px">
-            <div class="col-lg-8">
-                <div style="background:rgba(255,165,0,.08);border:1px dashed rgba(255,165,0,.3);border-radius:10px;padding:20px 24px;">
-                    <p class="mb-0 fs-14" style="color:rgba(255,165,0,.9)">
-                        <i class="bi bi-lightbulb-fill me-10px"></i>
-                        <strong>Como agregar fotos reales:</strong> En el archivo <code>index.html</code>, reemplaza cada <code>&lt;div class="service-card-img-placeholder"&gt;</code> por 
-                        <code>&lt;img src="images/NOMBRE-FOTO.jpg" alt="Descripcion"&gt;</code> dentro de <code>&lt;div class="service-card-img"&gt;</code>.
-                    </p>
-                </div>
-            </div>
-        </div>
     </div>
 </section>
 
-<!-- ===== GALERIA DEL TALLER ===== -->
+<!-- ===== GALERÍA DEL TALLER ===== -->
 <section id="galeria" class="bg-midnight-blue" style="background-image:url('images/lab-emprende-schedule-bg.png');background-position:left bottom;background-repeat:no-repeat">
     <div class="container">
         <div class="row justify-content-center text-center mb-6"
             data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":600,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
             <div class="col-lg-8">
                 <h2 class="alt-font text-white fw-500 ls-minus-2px mb-15px">
-                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Galeria del Taller
+                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Galería del taller
                 </h2>
-                <p class="opacity-7 fs-16">Conoce nuestras instalaciones, equipos de diagnostico y trabajos realizados.</p>
+                <p class="opacity-7 fs-16">Conoce nuestras instalaciones, equipos de diagnóstico y trabajos realizados.</p>
             </div>
         </div>
         <div class="row justify-content-center">
@@ -583,7 +561,7 @@
                     <div class="gallery-item">
                         <div class="gallery-placeholder text-white">
                             <i class="bi bi-camera-fill"></i>
-                            <p>Foto del taller 1</p>
+                            <p>Instalaciones</p>
                         </div>
                         <div class="gallery-item-overlay">
                             <i class="bi bi-zoom-in text-white fs-30"></i>
@@ -594,7 +572,7 @@
                     <div class="gallery-item">
                         <div class="gallery-placeholder text-white">
                             <i class="bi bi-camera-fill"></i>
-                            <p>Equipo de diagnostico</p>
+                            <p>Equipo de diagnóstico</p>
                         </div>
                         <div class="gallery-item-overlay">
                             <i class="bi bi-zoom-in text-white fs-30"></i>
@@ -627,7 +605,7 @@
                     <div class="gallery-item">
                         <div class="gallery-placeholder text-white">
                             <i class="bi bi-camera-fill"></i>
-                            <p>Programacion ECU</p>
+                            <p>Programación ECU</p>
                         </div>
                         <div class="gallery-item-overlay">
                             <i class="bi bi-zoom-in text-white fs-30"></i>
@@ -647,13 +625,6 @@
 
                 </div>
 
-                <div class="mt-30px" style="background:rgba(255,165,0,.08);border:1px dashed rgba(255,165,0,.3);border-radius:10px;padding:18px 22px;">
-                    <p class="mb-0 fs-14" style="color:rgba(255,165,0,.9)">
-                        <i class="bi bi-lightbulb-fill me-10px"></i>
-                        <strong>Como agregar fotos de la galeria:</strong> Reemplaza cada <code>&lt;div class="gallery-placeholder"&gt;</code> con
-                        <code>&lt;img src="images/taller-01.jpg" alt="Descripcion"&gt;</code>. Las imagenes se adaptan automaticamente al grid.
-                    </p>
-                </div>
             </div>
         </div>
     </div>
@@ -666,20 +637,20 @@
             <div class="col-lg-5 col-md-10 md-mb-40px"
                 data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":800,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
                 <h2 class="alt-font text-white fw-500 ls-minus-2px mb-35px">
-                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Quienes somos
+                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Quiénes somos
                 </h2>
                 <div class="icon-with-text-style-01 mb-28px pb-28px border-bottom border-color-transparent-white-light">
                     <div class="feature-box feature-box-left-icon-middle last-paragraph-no-margin">
                         <div class="feature-box-icon me-15px lh-0px"><i class="bi bi-bullseye icon-very-medium text-white"></i></div>
-                        <div class="feature-box-content"><span class="d-inline-block alt-font text-white fs-18">Mision</span></div>
-                        <div class="mt-8px w-100 fs-15">Brindar soluciones especializadas en electronica y mecatronica automotriz en Chincha, utilizando diagnostico avanzado no invasivo y programacion de modulos para garantizar la maxima eficiencia y seguridad.</div>
+                        <div class="feature-box-content"><span class="d-inline-block alt-font text-white fs-18">Misión</span></div>
+                        <div class="mt-8px w-100 fs-15">Brindar servicios de reparación y mantenimiento con eficiencia, transparencia y alto nivel técnico, superando las expectativas de nuestros clientes mediante procesos confiables y una atención orientada a la seguridad y rendimiento de cada vehículo.</div>
                     </div>
                 </div>
                 <div class="icon-with-text-style-01 mb-35px">
                     <div class="feature-box feature-box-left-icon-middle last-paragraph-no-margin">
                         <div class="feature-box-icon me-15px lh-0px"><i class="bi bi-eye icon-very-medium text-white"></i></div>
-                        <div class="feature-box-content"><span class="d-inline-block alt-font text-white fs-18">Vision</span></div>
-                        <div class="mt-8px w-100 fs-15">Consolidarnos como el taller multimarca lider en la Region Ica, reconocidos por la digitalizacion de procesos y transparencia en la gestion de activos.</div>
+                        <div class="feature-box-content"><span class="d-inline-block alt-font text-white fs-18">Visión</span></div>
+                        <div class="mt-8px w-100 fs-15">Ser reconocidos como una de las empresas líderes del sector automotriz regional, destacando por la calidad de servicio, innovación técnica, relaciones duraderas con los clientes y una cultura de mejora continua.</div>
                     </div>
                 </div>
                 <!-- Marcas -->
@@ -701,7 +672,7 @@
                         <i class="bi bi-person-fill fs-22 me-12px" style="color:var(--base-color)"></i>
                         <h5 class="alt-font text-white fw-500 mb-0 fs-17">Propietarios particulares</h5>
                     </div>
-                    <p class="opacity-7 fs-14 last-paragraph-no-margin">Vehiculos modernos 2010 en adelante que requieren diagnostico especializado. Valoran rapidez y exactitud desde la primera visita.</p>
+                    <p class="opacity-7 fs-14 last-paragraph-no-margin">Vehículos modernos 2010 en adelante que requieren diagnóstico especializado. Valoran rapidez y exactitud desde la primera visita.</p>
                 </div>
                 <div class="p-25px border border-color-transparent-white-light border-radius-6px" style="background:rgba(255,255,255,.03)">
                     <div class="d-flex align-items-center mb-12px">
@@ -715,14 +686,14 @@
     </div>
 </section>
 
-<!-- ===== UBICACION + CONTACTO ===== -->
+<!-- ===== UBICACIÓN + CONTACTO ===== -->
 <section id="ubicacion" class="bg-midnight-blue">
     <div class="container">
         <div class="row justify-content-center text-center mb-6"
             data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":600,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
             <div class="col-lg-8">
                 <h2 class="alt-font text-white fw-500 ls-minus-2px mb-15px">
-                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Como Llegarnos
+                    <span class="w-20px h-4px d-inline-block bg-base-color me-10px"></span>Cómo llegar
                 </h2>
                 <p class="opacity-7 fs-16">Estamos ubicados en Chincha, a una cuadra del local Arco Iris.</p>
             </div>
@@ -734,8 +705,8 @@
             <div class="col">
                 <div class="contact-info-card">                     
                     <i class="bi bi-geo-alt-fill fs-30 mb-15px d-block" style="color:var(--base-color)"></i>
-                    <h6 class="alt-font text-white fw-600 mb-10px">Direccion</h6>
-                    <p class="opacity-7 fs-14 last-paragraph-no-margin">Av. Jose Olaya 420<br>A una cuadra del local Arco Iris<br>Chincha, 11702, Peru</p>
+                    <h6 class="alt-font text-white fw-600 mb-10px">Dirección</h6>
+                    <p class="opacity-7 fs-14 last-paragraph-no-margin">Calle José Olaya 420<br>A una cuadra del local Arco Iris<br>Chincha Alta, Ica, Perú</p>
                 </div>
             </div>
             <div class="col">
@@ -751,7 +722,7 @@
                     <i class="bi bi-envelope-fill fs-30 mb-15px d-block" style="color:var(--base-color)"></i>
                     <h6 class="alt-font text-white fw-600 mb-10px">Correo</h6>
                     <a href="mailto:mancuriaautomotriz@gmail.com" class="d-block text-white opacity-7 fs-13" style="text-decoration:none;word-break:break-all">mancuriaautomotriz@gmail.com</a>
-                    <a href="mailto:mancuriaautomotriz@gmail.com" class="btn btn-small btn-dark-gray btn-round-edge mt-12px fs-12">Escribir correo</a>
+                    <a href="mailto:mancuriaautomotriz@gmail.com" class="btn btn-small btn-dark-gray btn-round-edge mt-12px fs-12 contact-mail-button">Escribir correo</a>
                 </div>
             </div>
             <div class="col">
@@ -760,7 +731,7 @@
                     <h6 class="alt-font text-white fw-600 mb-10px">Horarios</h6>
                     <p class="opacity-7 fs-14 last-paragraph-no-margin">
                         Lun &ndash; Vie: 8:00 &ndash; 18:00<br>
-                        Sabado: 8:00 &ndash; 13:00<br>
+                        Sábado: 8:00 &ndash; 13:00<br>
                         <span class="opacity-5">Domingo: Cerrado</span>
                     </p>
                 </div>
@@ -773,15 +744,15 @@
             <div class="col-12">
                 <div class="map-wrapper">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3873.456!2d-75.9754!3d-13.4095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zAv.+Jose+Olaya+420%2C+Chincha%2C+Ica%2C+Peru!5e0!3m2!1ses!2spe!4v1680000000000!5m2!1ses!2spe&q=Av+Jose+Olaya+420+Chincha+Ica+Peru"
+                        src="https://www.google.com/maps?q=Calle%20Jos%C3%A9%20Olaya%20420%2C%20Chincha%20Alta%2C%20Chincha%2C%20Ica%2C%20Per%C3%BA&output=embed"
                         allowfullscreen=""
                         loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"
-                        title="Ubicacion Mancuria - Av. Jose Olaya 420, Chincha">
+                        title="Ubicación Mancuria - Calle José Olaya 420, Chincha Alta">
                     </iframe>
                 </div>
                 <div class="text-center mt-20px">
-                    <a href="https://maps.google.com/?q=Av+Jose+Olaya+420+Chincha+Ica+Peru" target="_blank"
+                    <a href="https://maps.google.com/?q=Calle+Jos%C3%A9+Olaya+420+Chincha+Alta+Ica+Per%C3%BA" target="_blank"
                         class="btn btn-large btn-dark-gray btn-hover-animation btn-round-edge btn-box-shadow">
                         <span><span class="btn-text"><i class="bi bi-google me-10px"></i>Abrir en Google Maps</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>
                     </a>
@@ -796,8 +767,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-8 text-center last-paragraph-no-margin">
-                <h2 class="alt-font text-white fw-500 mb-15px ls-minus-2px">Listo para traer tu vehiculo?</h2>
-                <p class="opacity-7 fs-17 mb-35px">Visitanos en Chincha o escribenos ahora. Diagnostico rapido y preciso desde la primera visita.</p>
+                <h2 class="alt-font text-white fw-500 mb-15px ls-minus-2px">¿Listo para traer tu vehículo?</h2>
+                <p class="opacity-7 fs-17 mb-35px">Visítanos en Chincha o escríbenos ahora. Diagnóstico rápido y preciso desde la primera visita.</p>
                 <div class="cta-actions d-flex gap-3 justify-content-center flex-wrap">
                     <a href="https://wa.me/51946359204?text=Hola%20Mancuria,%20quiero%20agendar%20una%20cita" target="_blank"
                         class="btn btn-extra-large btn-base-color btn-hover-animation btn-rounded btn-box-shadow align-self-center">
@@ -817,9 +788,9 @@
     <div class="container">
         <div class="row justify-content-center text-center text-sm-start g-4">
             <div class="col-lg-3 col-sm-6">
-                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-map-pin align-text-bottom icon-extra-medium text-base-color me-10px"></i>Ubicacion</span>
-                <p class="mb-5px fs-14">Av. Jose Olaya 420<br>A una cuadra del local Arco Iris<br>Chincha 11702, Ica, Peru</p>
-                <a href="https://maps.google.com/?q=Av+Jose+Olaya+420+Chincha" target="_blank" class="text-decoration-line-bottom text-uppercase fs-13 alt-font fw-500">Abrir mapa</a>
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-map-pin align-text-bottom icon-extra-medium text-base-color me-10px"></i>Ubicación</span>
+                <p class="mb-5px fs-14">Calle José Olaya 420<br>A una cuadra del local Arco Iris<br>Chincha Alta, Ica, Perú</p>
+                <a href="https://maps.google.com/?q=Calle+Jos%C3%A9+Olaya+420+Chincha+Alta+Ica+Per%C3%BA" target="_blank" class="text-decoration-line-bottom text-uppercase fs-13 alt-font fw-500">Abrir mapa</a>
             </div>
             <div class="col-lg-3 col-sm-6">
                 <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-phone-call align-text-bottom icon-extra-medium text-base-color me-10px"></i>Contacto</span>
@@ -830,7 +801,7 @@
             <div class="col-lg-3 col-sm-6">
                 <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-clock align-text-bottom icon-extra-medium text-base-color me-10px"></i>Horarios</span>
                 <p class="mb-5px fs-14">Lun &ndash; Vie: 8:00 &ndash; 18:00</p>
-                <p class="mb-5px fs-14">Sabado: 8:00 &ndash; 13:00</p>
+                <p class="mb-5px fs-14">Sábado: 8:00 &ndash; 13:00</p>
                 <p class="mb-5px opacity-5 fs-14">Domingo: Cerrado</p>
             </div>
             <div class="col-lg-3 col-sm-6">
@@ -838,7 +809,7 @@
                 <p class="mb-20px fs-14">Recibe tips de mantenimiento y novedades</p>
                 <div class="d-inline-block w-100 newsletter-style-01 position-relative">
                     <form action="email-templates/subscribe-newsletter.php" method="post">
-                        <input class="bg-white input-small border-color-white form-control required" name="email" placeholder="Tu correo electronico" type="email">
+                        <input class="bg-white input-small border-color-white form-control required" name="email" placeholder="Tu correo electrónico" type="email">
                         <input type="hidden" name="redirect" value="">
                         <button class="btn btn-small btn-base-color ps-15px pe-15px base-color-hover submit" aria-label="submit"><i class="feather icon-feather-mail m-0 align-middle icon-small text-white"></i></button>
                     </form>
@@ -848,7 +819,7 @@
 
         <div class="row align-items-center pt-6 md-pt-40px">
             <div class="col-lg-3 col-sm-6 text-center text-sm-start">
-                <span class="alt-font fw-800 fs-24 text-white d-block" style="letter-spacing:-1px">MANCURIA</span>
+                <img src="images/mancuria-logo-final-nav.png" alt="Mancuria Mantenimiento Automotriz" class="footer-logo">
                 <p class="opacity-5 fs-12 mt-4px mb-0">Taller Automotriz Especializado - Chincha, Ica</p>
             </div>
             <div class="col-lg-6 order-1 order-sm-3 order-lg-1 md-mt-15px">
@@ -856,8 +827,8 @@
                     <li class="nav-item"><a href="#inicio" class="nav-link">Inicio</a></li>
                     <li class="nav-item"><a href="#servicios" class="nav-link">Servicios</a></li>
                     <li class="nav-item"><a href="buscarOT.html" class="nav-link">Buscar OT</a></li>
-                    <li class="nav-item"><a href="#galeria" class="nav-link">Galeria</a></li>
-                    <li class="nav-item"><a href="#ubicacion" class="nav-link">Ubicacion</a></li>
+                    <li class="nav-item"><a href="#galeria" class="nav-link">Galería</a></li>
+                    <li class="nav-item"><a href="#ubicacion" class="nav-link">Ubicación</a></li>
                 </ul>
             </div>
             <div class="col-lg-3 col-sm-6 order-3 order-sm-2 order-lg-3 text-center text-sm-end xs-mt-10px last-paragraph-no-margin">
@@ -874,5 +845,22 @@
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/vendors.min.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
+<script>
+    document.querySelectorAll('.service-card-whatsapp').forEach((card) => {
+        const openWhatsApp = () => {
+            const service = card.dataset.service || 'un servicio automotriz';
+            const message = `Hola Mancuria, quiero consultar sobre el servicio: ${service}. ¿Me podrían brindar información, disponibilidad y precio?`;
+            window.open(`https://wa.me/51946359204?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+        };
+
+        card.addEventListener('click', openWhatsApp);
+        card.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openWhatsApp();
+            }
+        });
+    });
+</script>
 </body>
 </html>

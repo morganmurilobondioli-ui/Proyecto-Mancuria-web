@@ -1,11 +1,11 @@
-<!doctype html>
+﻿<!doctype html>
 <html class="no-js" lang="es">
 <head>
     <title>Buscar OT - Mancuria Taller Automotriz</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="description" content="Consulta el estado de tu Orden de Trabajo en Mancuria, Chincha, Ica, Peru.">
+    <meta name="description" content="Consulta el estado de tu Orden de Trabajo en Mancuria, Chincha, Ica, Perú.">
     <meta name="theme-color" content="#0d1117">
     <link rel="shortcut icon" href="images/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -26,7 +26,7 @@
 
     /* ===== WHATSAPP FLOATING BUTTON ===== */
     .whatsapp-float {
-        position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+        position: fixed; bottom: 96px; right: 24px; z-index: 9998;
         width: 60px; height: 60px; background: #25D366; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         box-shadow: 0 4px 20px rgba(37,211,102,0.5); text-decoration: none;
@@ -35,10 +35,17 @@
     .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.7); }
     .whatsapp-float svg { width: 32px; height: 32px; fill: #fff; }
     .whatsapp-tooltip {
-        position: fixed; bottom: 32px; right: 94px; background: #fff; color: #333;
+        position: fixed; bottom: 106px; right: 94px; background: #fff; color: #333;
         padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
         box-shadow: 0 4px 16px rgba(0,0,0,.15); white-space: nowrap;
         opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 9998;
+    }
+    .grecaptcha-badge {
+        visibility: visible !important;
+        opacity: 1 !important;
+        bottom: 12px !important;
+        right: 12px !important;
+        z-index: 9997 !important;
     }
     .whatsapp-tooltip::after {
         content: ''; position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
@@ -62,7 +69,7 @@
         position: absolute;
         top: -200px; right: -200px;
         width: 600px; height: 600px;
-        background: radial-gradient(circle, rgba(var(--base-color-rgb,255,107,0), .08) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(var(--base-color-rgb,229,9,45), .08) 0%, transparent 70%);
         pointer-events: none;
     }
     .ot-hero::after {
@@ -74,23 +81,246 @@
         pointer-events: none;
     }
 
-    @media (max-width: 768px) {
-        header nav.navbar {
-            position: relative;
-            z-index: 999;
-        }
-        .navbar-toggler {
-            border-color: rgba(255,255,255,.2);
-        }
-        .navbar-collapse {
-            background: rgba(10,14,26,.98);
-            border-radius: 16px;
-            margin-top: 10px;
-            padding: 16px 14px;
-        }
-        .navbar-nav .nav-link {
+    /* ===== NAVBAR - LIMPIO Y SIMPLE ===== */
+    
+    header {
+        background: linear-gradient(180deg, rgba(10,14,26,0.98) 0%, rgba(10,14,26,0.95) 100%);
+        border-bottom: 1px solid rgba(255,255,255,.05);
+        position: relative;
+        z-index: 1000;
+    }
+
+    header .navbar {
+        padding: 14px 0;
+    }
+
+    .navbar-brand {
+        font-size: 20px !important;
+        color: #fff !important;
+        letter-spacing: -1px;
+        padding: 0 !important;
+    }
+
+    .navbar-brand:hover {
+        color: var(--base-color, #e5092d) !important;
+    }
+
+    .navbar-toggler {
+        display: none;
+        border: none !important;
+        background: transparent;
+        padding: 6px !important;
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: none !important;
+    }
+
+    .navbar-toggler-line {
+        width: 20px;
+        height: 2px;
+        background: rgba(255,255,255,.8);
+        display: block;
+        margin: 5px 0;
+        transition: all .3s ease;
+    }
+
+    .navbar-toggler[aria-expanded="true"] .navbar-toggler-line:nth-child(1) {
+        transform: rotate(45deg) translate(8px, 8px);
+    }
+
+    .navbar-toggler[aria-expanded="true"] .navbar-toggler-line:nth-child(2) {
+        opacity: 0;
+    }
+
+    .navbar-toggler[aria-expanded="true"] .navbar-toggler-line:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    .navbar-toggler[aria-expanded="true"] .navbar-toggler-line:nth-child(4) {
+        opacity: 0;
+    }
+
+    .navbar-collapse {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    .navbar-nav {
+        gap: 4px;
+        align-items: center;
+    }
+
+    .navbar-nav .nav-link {
+        color: rgba(255,255,255,.85) !important;
+        font-size: 14px;
+        padding: 8px 14px !important;
+        transition: all .3s ease;
+        border-radius: 6px;
+        text-transform: capitalize;
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+        color: var(--base-color, #e5092d) !important;
+        background: rgba(229,9,45,.12);
+    }
+
+    .header-icon {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .header-button a {
+        font-size: 12px !important;
+        padding: 8px 14px !important;
+        border-radius: 6px;
+    }
+
+    .bi {
+        font-size: 13px !important;
+    }
+
+    /* ===== RESPONSIVE MOBILE (< 768px) ===== */
+    @media (max-width: 767px) {
+        header .navbar {
             padding: 10px 0;
-            line-height: 1.4;
+        }
+
+        header .container-fluid {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .navbar-brand {
+            font-size: 16px !important;
+        }
+
+        /* Mostrar hamburger en móvil */
+        .navbar-toggler {
+            display: block !important;
+        }
+
+        /* Menú colapsable en móvil */
+        .collapse {
+            position: absolute;
+            top: 100%;
+            left: 12px;
+            right: 12px;
+            background: rgba(10,14,26,.98) !important;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 10px;
+            margin-top: 8px;
+            padding: 12px !important;
+            width: calc(100% - 24px);
+            box-shadow: 0 8px 24px rgba(0,0,0,.3);
+            backdrop-filter: blur(10px);
+            z-index: 1001;
+        }
+
+        .collapse.collapse:not(.show) {
+            display: none !important;
+        }
+
+        .collapse.show {
+            display: block !important;
+        }
+
+        .navbar-nav {
+            flex-direction: column;
+            gap: 2px;
+            width: 100%;
+        }
+
+        .navbar-nav .nav-item {
+            width: 100%;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 13px;
+            padding: 11px 12px !important;
+            width: 100%;
+            display: block;
+        }
+
+        .header-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+        }
+
+        .header-button a {
+            font-size: 10px !important;
+            padding: 6px 10px !important;
+        }
+
+        .bi.bi-whatsapp {
+            display: inline !important;
+            font-size: 12px;
+        }
+    }
+
+    /* ===== RESPONSIVE ULTRA MOBILE (< 360px) ===== */
+    @media (max-width: 359px) {
+        header .container-fluid {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .navbar-brand {
+            font-size: 14px !important;
+        }
+
+        .collapse {
+            left: 10px;
+            right: 10px;
+            width: calc(100% - 20px);
+        }
+
+        .navbar-toggler-line {
+            width: 18px;
+            height: 1.5px;
+            margin: 4px 0;
+        }
+
+        .header-button a {
+            font-size: 9px !important;
+            padding: 5px 8px !important;
+        }
+    }
+
+    /* ===== RESPONSIVE DESKTOP (â‰¥ 992px) ===== */
+    @media (min-width: 992px) {
+        header .navbar {
+            padding: 16px 0;
+        }
+
+        header .container-fluid {
+            padding-left: 45px;
+            padding-right: 45px;
+        }
+
+        .navbar-brand {
+            font-size: 24px !important;
+        }
+
+        .navbar-nav {
+            flex-direction: row;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 15px;
+            padding: 8px 16px !important;
+        }
+
+        .header-button a {
+            font-size: 13px !important;
+            padding: 10px 16px !important;
+        }
+
+        .bi {
+            margin-right: 5px;
         }
     }
 
@@ -109,7 +339,7 @@
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 2px;
-        background: linear-gradient(90deg, transparent, var(--base-color,#ff6b00), transparent);
+        background: linear-gradient(90deg, transparent, var(--base-color,#e5092d), transparent);
     }
     @media(max-width:576px) { .ot-search-wrapper { padding: 24px 20px; } }
 
@@ -131,7 +361,7 @@
         transition: border-color .3s, background .3s;
     }
     #matriculaInput::placeholder { color: rgba(255,255,255,.25); letter-spacing: 2px; font-weight: 400; font-size: 15px; }
-    #matriculaInput:focus { outline: none; border-color: var(--base-color,#ff6b00); background: rgba(255,255,255,.1); }
+    #matriculaInput:focus { outline: none; border-color: var(--base-color,#e5092d); background: rgba(255,255,255,.1); }
     @media(max-width:576px) { #matriculaInput { font-size:16px; letter-spacing:3px; padding:14px 16px; } }
 
     /* ===== LOADING ===== */
@@ -139,7 +369,7 @@
     .ot-spinner {
         width: 48px; height: 48px;
         border: 3px solid rgba(255,255,255,.08);
-        border-top-color: var(--base-color,#ff6b00);
+        border-top-color: var(--base-color,#e5092d);
         border-radius: 50%;
         animation: spin .8s linear infinite;
         margin: 0 auto 16px;
@@ -147,147 +377,254 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .spin-icon { display: inline-block; animation: spin .8s linear infinite; }
 
-    /* ===== RESULT CARD ===== */
-    .ot-result-card {
+    /* ===== RESULT CARD (compact) ===== */
+    .ot-results-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 22px;
+        margin-bottom: 10px;
+        padding: 12px 14px;
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 10px;
         background: rgba(255,255,255,.04);
-        border: 1px solid rgba(255,255,255,.12);
-        border-radius: 14px;
-        margin-top: 28px;
-        overflow: hidden;
-        animation: slideUp .4s ease forwards;
     }
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to   { opacity: 1; transform: translateY(0); }
+    .ot-results-header-main {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255,255,255,.78);
+        font-size: 14px;
+        min-width: 0;
+    }
+    .ot-results-header-main strong {
+        color: #fff;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 180px;
+    }
+    .ot-count {
+        background: rgba(229,9,45,.16);
+        border: 1px solid rgba(229,9,45,.28);
+        color: #fff;
+        border-radius: 999px;
+        padding: 2px 10px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+    .ot-results-toolbar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+    .ot-results-toolbar label {
+        font-size: 12px;
+        color: rgba(255,255,255,.62);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .ot-filter-select {
+        min-width: 190px;
+        height: 40px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,.18);
+        background: rgba(255,255,255,.06);
+        color: #fff;
+        padding: 8px 34px 8px 12px;
+        font-size: 14px;
+        line-height: 1.2;
+    }
+    .ot-filter-select:focus {
+        outline: none;
+        border-color: rgba(229,9,45,.52);
+        box-shadow: 0 0 0 3px rgba(229,9,45,.18);
+    }
+    .ot-filter-select option {
+        color: #111827;
     }
 
+    .ot-result-card {
+        background: rgba(255,255,255,.035);
+        border: 1px solid rgba(255,255,255,.11);
+        border-radius: 12px;
+        margin-top: 12px;
+        overflow: hidden;
+        animation: slideUp .35s ease forwards;
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
     .ot-result-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 18px 24px;
-        background: rgba(255,255,255,.06);
-        border-bottom: 1px solid rgba(255,255,255,.1);
-        flex-wrap: wrap;
         gap: 12px;
+        padding: 12px 14px;
+        background: rgba(255,255,255,.05);
+        border-bottom: 1px solid rgba(255,255,255,.09);
     }
-    .ot-num-label { font-size: 11px; color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
-    .ot-num-val  { font-size: 20px; font-weight: 800; color: #fff; }
-
-    /* Estado badges */
+    .ot-num-label {
+        font-size: 10px;
+        color: rgba(255,255,255,.46);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: block;
+        margin-bottom: 3px;
+    }
+    .ot-num-val {
+        font-size: 16px;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.1;
+    }
     .ot-badge {
-        display: inline-flex; align-items: center; gap: 6px;
-        font-size: 12px; font-weight: 700; padding: 6px 16px;
-        border-radius: 30px; text-transform: uppercase; letter-spacing: .5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 6px 10px;
+        border-radius: 999px;
+        letter-spacing: .2px;
+        white-space: nowrap;
     }
-    .ot-badge-listo    { background: rgba(39,174,96,.18);  color: #2ecc71; border: 1px solid rgba(39,174,96,.35); }
-    .ot-badge-proceso  { background: rgba(52,152,219,.18); color: #3498db; border: 1px solid rgba(52,152,219,.35); }
-    .ot-badge-espera   { background: rgba(243,156,18,.18); color: #f39c12; border: 1px solid rgba(243,156,18,.35); }
-    .ot-badge-entregado{ background: rgba(142,68,173,.18); color: #9b59b6; border: 1px solid rgba(142,68,173,.35); }
-    .ot-badge-default  { background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); border: 1px solid rgba(255,255,255,.2); }
+    .ot-badge-proceso {
+        background: rgba(229,9,45,.18);
+        color: #ff6278;
+        border: 1px solid rgba(229,9,45,.36);
+    }
+    .ot-badge-pendiente {
+        background: rgba(251,191,36,.16);
+        color: #facc15;
+        border: 1px solid rgba(251,191,36,.38);
+    }
+    .ot-badge-finalizado {
+        background: rgba(34,197,94,.16);
+        color: #4ade80;
+        border: 1px solid rgba(34,197,94,.38);
+    }
 
-    .ot-result-body { padding: 28px 24px; }
-    @media(max-width:576px) { .ot-result-body { padding: 20px 18px; } }
-
-    /* Info sections inside card */
-    .ot-section-title {
-        font-size: 11px; font-weight: 700; text-transform: uppercase;
-        letter-spacing: 1.5px; color: rgba(255,255,255,.35);
-        display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+    .ot-result-body {
+        padding: 12px 14px 14px;
     }
-    .ot-section-title::after {
-        content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.08);
-    }
-
-    .ot-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 16px;
-        margin-bottom: 24px;
-    }
-    @media(max-width:480px) { .ot-grid { grid-template-columns: 1fr 1fr; } }
-
-    .ot-field { }
-    .ot-field-label {
-        font-size: 10px; font-weight: 600; text-transform: uppercase;
-        letter-spacing: 1px; color: rgba(255,255,255,.4); display: block; margin-bottom: 5px;
-    }
-    .ot-field-value {
-        font-size: 15px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 7px;
-    }
-    .ot-field-value.accent { color: var(--base-color, #ff6b00); font-size: 20px; font-weight: 800; }
-    .ot-field-value.green  { color: #2ecc71; }
-    .ot-field-value.blue   { color: #3498db; }
-    .ot-field-value.purple { color: #9b59b6; }
-
-    /* Car highlight block */
-    .ot-car-block {
-        display: flex; align-items: center; gap: 18px;
-        background: rgba(255,255,255,.04);
-        border: 1px solid rgba(255,255,255,.1);
+    .ot-falla-principal {
+        background: linear-gradient(135deg, rgba(229,9,45,.2), rgba(255,255,255,.03));
+        border: 1px solid rgba(229,9,45,.34);
         border-radius: 10px;
-        padding: 18px 20px;
-        margin-bottom: 24px;
+        padding: 12px 13px;
+        margin-bottom: 10px;
     }
-    .ot-car-icon {
-        width: 52px; height: 52px; border-radius: 12px;
-        background: rgba(255,255,255,.07);
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0;
-        font-size: 24px;
+    .ot-falla-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #ff5e74;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
     }
-    .ot-car-plate {
-        display: inline-flex; align-items: center;
-        background: #fff; color: #0a0e1a;
-        font-weight: 900; font-size: 18px; letter-spacing: 4px;
-        padding: 5px 16px; border-radius: 6px;
-        border: 3px solid rgba(0,0,0,.15);
-        margin-top: 4px;
-    }
-
-    /* Dates row */
-    .ot-dates-row {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-        margin-bottom: 24px;
-    }
-    @media(max-width:480px) { .ot-dates-row { grid-template-columns: 1fr; } }
-
-    .ot-date-box {
-        background: rgba(255,255,255,.04);
-        border: 1px solid rgba(255,255,255,.1);
-        border-radius: 10px;
-        padding: 16px 18px;
-        position: relative;
+    .ot-falla-principal h3 {
+        color: #fff;
+        font-size: clamp(20px, 2.8vw, 28px);
+        line-height: 1.13;
+        font-weight: 800;
+        letter-spacing: 0;
+        margin: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    .ot-date-box.completed { border-color: rgba(39,174,96,.25); background: rgba(39,174,96,.05); }
-    .ot-date-box-icon {
-        position: absolute; right: 14px; top: 50%;
-        transform: translateY(-50%);
-        font-size: 28px; opacity: .08;
+    .ot-mini-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 10px;
     }
-
-    /* Work / observations */
-    .ot-work-block {
-        background: rgba(255,255,255,.03);
-        border: 1px solid rgba(255,255,255,.08);
-        border-radius: 10px;
-        padding: 18px 20px;
-        margin-bottom: 24px;
+    .ot-mini-item {
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 9px;
+        padding: 10px 11px;
+        min-width: 0;
     }
-    .ot-work-text { color: rgba(255,255,255,.75); font-size: 14px; line-height: 1.7; margin: 0; }
-
-    /* Price total bar */
+    .ot-mini-item-full {
+        grid-column: 1 / -1;
+    }
+    .ot-mini-item-label {
+        display: block;
+        color: rgba(255,255,255,.44);
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .9px;
+        margin-bottom: 5px;
+    }
+    .ot-mini-item-value {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.3;
+        word-break: break-word;
+    }
+    .ot-mini-item-value-muted {
+        color: rgba(255,255,255,.62);
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .ot-mini-plate {
+        display: inline-block;
+        background: #fff;
+        color: #0a0e1a;
+        font-weight: 900;
+        font-size: 16px;
+        letter-spacing: 2px;
+        padding: 3px 10px;
+        border-radius: 6px;
+        border: 2px solid rgba(0,0,0,.14);
+    }
+    .ot-mini-work {
+        color: rgba(255,255,255,.78);
+        font-size: 14px;
+        line-height: 1.45;
+        margin: 0;
+    }
     .ot-price-bar {
-        display: flex; justify-content: space-between; align-items: center;
-        background: rgba(255,255,255,.06);
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        border-radius: 9px;
         border: 1px solid rgba(255,255,255,.12);
-        border-radius: 10px;
-        padding: 18px 22px;
+        background: rgba(255,255,255,.05);
+        padding: 10px 11px;
     }
-    .ot-price-label { font-size: 13px; color: rgba(255,255,255,.55); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-    .ot-price-amount { font-size: 28px; font-weight: 800; color: #fff; }
-    .ot-price-currency { font-size: 14px; color: rgba(255,255,255,.4); margin-left: 5px; }
+    .ot-price-label {
+        font-size: 11px;
+        color: rgba(255,255,255,.58);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .8px;
+    }
+    .ot-price-amount {
+        font-size: 30px;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1;
+    }
+    .ot-price-currency {
+        font-size: 12px;
+        color: rgba(255,255,255,.46);
+        margin-left: 4px;
+    }
 
     /* Status legend cards */
     .status-legend-card {
@@ -307,7 +644,7 @@
         animation: slideUp .3s ease forwards;
     }
     .ot-alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-    .ot-alert-warning { background: rgba(243,156,18,.1); border: 1px solid rgba(243,156,18,.25); color: #f39c12; }
+    .ot-alert-warning { background: rgba(229,9,45,.1); border: 1px solid rgba(229,9,45,.25); color: #ff4d63; }
     .ot-alert-danger  { background: rgba(231,76,60,.1);  border: 1px solid rgba(231,76,60,.25);  color: #e74c3c; }
     .ot-alert-text    { font-size: 14px; line-height: 1.6; }
     .ot-alert-text strong { color: #fff; }
@@ -339,27 +676,25 @@
         .ot-search-wrapper { padding: 32px 26px; }
         .ot-hero { padding: 100px 0 60px; }
         .ot-hero h1 { font-size: 42px !important; line-height: 1.05 !important; }
-        .ot-price-bar { flex-wrap: wrap; gap: 12px; }
-        .ot-price-amount { font-size: 24px; }
-        .ot-car-block { flex-wrap: wrap; justify-content: space-between; }
-        .ot-car-block > div { min-width: 100px; }
+        .ot-results-toolbar { justify-content: space-between; }
+        .ot-price-amount { font-size: 26px; }
     }
 
     @media (max-width: 768px) {
         .ot-search-wrapper { padding: 28px 22px; }
-        .ot-result-body { padding: 20px 16px; }
         .ot-hero { padding: 80px 0 50px; }
         .ot-hero h1 { font-size: 36px !important; }
         #matriculaInput { font-size: 18px; letter-spacing: 3px; }
         .ot-input-group { gap: 10px; }
         .ot-input-group button { min-width: 140px; }
-        .ot-car-block { gap: 14px; }
-        .ot-car-icon { width: 48px; height: 48px; font-size: 22px; }
-        .ot-car-plate { font-size: 16px; letter-spacing: 2px; padding: 6px 12px; }
-        .ot-grid { gap: 14px; }
-        .ot-dates-row { gap: 14px; }
-        .ot-date-box { padding: 14px 16px; }
-        .ot-work-block { padding: 16px 18px; }
+        .ot-results-header { margin-top: 18px; }
+        .ot-results-toolbar {
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+        .ot-results-toolbar label { width: 100%; }
+        .ot-filter-select { width: 100%; min-width: 0; }
+        .ot-falla-principal h3 { font-size: 24px; }
         .status-legend-card { padding: 16px 12px; }
         .whatsapp-tooltip { display: none; }
     }
@@ -373,19 +708,27 @@
         .ot-hero h1 { font-size: 30px !important; line-height: 1.1 !important; }
         .ot-hero p { font-size: 15px; }
         #matriculaInput { font-size: 16px; letter-spacing: 2px; padding: 14px 16px; }
-        .ot-result-header { padding: 16px 18px; }
-        .ot-result-body { padding: 18px 16px; }
-        .ot-grid { grid-template-columns: 1fr; }
-        .ot-dates-row { grid-template-columns: 1fr; }
-        .ot-price-bar { flex-direction: column; align-items: flex-start; padding: 16px 18px; }
+        .ot-result-header { padding: 11px 12px; }
+        .ot-result-body { padding: 11px 12px 12px; }
+        .ot-num-val { font-size: 15px; }
+        .ot-badge { font-size: 10px; padding: 5px 8px; }
+        .ot-falla-principal { padding: 11px 12px; }
+        .ot-falla-principal h3 { font-size: 22px; -webkit-line-clamp: 4; }
+        .ot-mini-grid { grid-template-columns: 1fr; gap: 9px; }
         .ot-price-amount { font-size: 22px; }
         .ot-work-text, .ot-alert-text, .ot-empty-sub { font-size: 14px; }
         .status-legend-card { min-height: auto; }
         .map-wrapper { height: 240px; }
-        .whatsapp-float { width: 52px; height: 52px; bottom: 18px; right: 18px; }
+        .whatsapp-float { width: 52px; height: 52px; bottom: 86px; right: 18px; }
         .whatsapp-float svg { width: 28px; height: 28px; }
         .footer-navbar { display: grid; gap: 10px; justify-items: center; }
         .row.row-cols-3 { --bs-columns: 1; }
+    }
+
+    @media (orientation: landscape) and (max-width: 992px) {
+        .ot-falla-principal h3 { -webkit-line-clamp: 2; }
+        .ot-mini-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .ot-mini-item-full { grid-column: 1 / -1; }
     }
 
     @media (max-width: 992px) {
@@ -402,6 +745,7 @@
     .ot-empty-title { font-size: 18px; color: #fff; font-weight: 600; margin-bottom: 8px; }
     .ot-empty-sub   { font-size: 14px; color: rgba(255,255,255,.5); }
     </style>
+    <link rel="stylesheet" href="css/mancuria-ui.css"/>
 </head>
 <body data-mobile-nav-style="classic">
 
@@ -411,7 +755,7 @@
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
     </svg>
 </a>
-<div class="whatsapp-tooltip">Escribenos por WhatsApp</div>
+<div class="whatsapp-tooltip">Escríbenos por WhatsApp</div>
 
 <!-- ===== HEADER (identical to index) ===== -->
 <header>
@@ -419,9 +763,7 @@
         <div class="container-fluid">
             <div class="col-auto col-lg-2 me-lg-0 me-auto">
                 <a class="navbar-brand" href="index.html">
-                    <span class="alt-font fw-800 fs-22 text-white default-logo" style="letter-spacing:-1px">MANCURIA</span>
-                    <span class="alt-font fw-800 fs-22 alt-logo" style="letter-spacing:-1px;color:#17161a">MANCURIA</span>
-                    <span class="alt-font fw-800 fs-22 mobile-logo" style="letter-spacing:-1px;color:#17161a">MANCURIA</span>
+                    <img src="images/mancuria-logo-final-nav.png" alt="Mancuria" class="brand-logo">
                 </a>
             </div>
             <div class="col-auto menu-order position-static">
@@ -434,9 +776,9 @@
                         <li class="nav-item"><a href="index.html#inicio" class="nav-link">Inicio</a></li>
                         <li class="nav-item"><a href="index.html#servicios" class="nav-link">Servicios</a></li>
                         <li class="nav-item"><a href="buscarOT.html" class="nav-link active">Buscar OT</a></li>
-                        <li class="nav-item"><a href="index.html#galeria" class="nav-link">Galeria</a></li>
+                        <li class="nav-item"><a href="index.html#galeria" class="nav-link">Galería</a></li>
                         <li class="nav-item"><a href="index.html#nosotros" class="nav-link">Nosotros</a></li>
-                        <li class="nav-item"><a href="index.html#ubicacion" class="nav-link">Ubicacion</a></li>
+                        <li class="nav-item"><a href="index.html#ubicacion" class="nav-link">Ubicación</a></li>
                     </ul>
                 </div>
             </div>
@@ -461,13 +803,13 @@
         <div class="row justify-content-center text-center mb-50px"
             data-anime='{"el":"childs","translateY":[30,0],"opacity":[0,1],"duration":800,"delay":0,"staggervalue":200,"easing":"easeOutQuad"}'>
             <div class="col-lg-7">
-                <span class="alt-font fw-600 fs-14 text-uppercase ls-2px d-block mb-18px" style="color:var(--base-color,#ff6b00)">
+                <span class="alt-font fw-600 fs-14 text-uppercase ls-2px d-block mb-18px" style="color:var(--base-color,#e5092d)">
                     <i class="bi bi-search me-8px"></i>Seguimiento en tiempo real
                 </span>
                 <h1 class="alt-font text-white fw-500 ls-minus-2px mb-20px" style="font-size:48px;line-height:1.1">
-                    ¿Como esta<br>tu vehiculo?
+                    ¿Cómo está <br>tu vehículo?
                 </h1>
-                <p class="opacity-7 fs-17">Ingresa la matricula/placa y consulta el estado de tu Orden de Trabajo al instante.</p>
+                <p class="opacity-7 fs-17">Ingresa la matrícula/placa y consulta el estado de tu Orden de Trabajo al instante.</p>
             </div>
         </div>
 
@@ -477,12 +819,12 @@
             <div class="col-lg-7 col-md-9 col-12">
                 <div class="ot-search-wrapper">
                     <label class="alt-font text-white fw-600 mb-20px d-block fs-17">
-                        <i class="bi bi-car-front-fill me-10px" style="color:var(--base-color,#ff6b00)"></i>Matricula / Placa del vehiculo
+                        <i class="bi bi-car-front-fill me-10px" style="color:var(--base-color,#e5092d)"></i>Matrícula / Placa del vehículo
                     </label>
                     <div class="ot-input-group">
                         <input type="text" id="matriculaInput"
                             placeholder="ABC&minus;123"
-                            maxlength="8"
+                            maxlength="9"
                             autocomplete="off"
                             spellcheck="false"
                             onkeypress="if(event.key==='Enter') window.buscarOT()" />
@@ -496,37 +838,17 @@
                     </div>
                     <p class="opacity-4 fs-12 mt-15px mb-0">
                         <i class="bi bi-info-circle me-5px"></i>
-                        Solo letras y numeros. Ejemplo: <strong class="text-white">ABC123</strong> o <strong class="text-white">1WE-SDX</strong>
+                        Solo letras y números. Ejemplo: <strong class="text-white">ABC123</strong> o <strong class="text-white">1WE-SDX</strong>
+                    </p>
+                    <p class="recaptcha-note mb-0">
+                        Protegido por reCAPTCHA. Aplican la
+                        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Política de Privacidad</a>
+                        y los
+                        <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Términos</a> de Google.
                     </p>
 
                     <!-- Result area -->
                     <div id="otResultado"></div>
-                </div>
-
-                <!-- Status legend -->
-                <div class="row row-cols-3 g-3 mt-20px text-center"
-                    data-anime='{"el":"childs","translateY":[20,0],"opacity":[0,1],"duration":600,"delay":500,"staggervalue":100,"easing":"easeOutQuad"}'>
-                    <div class="col">
-                        <div class="status-legend-card">
-                            <i class="bi bi-gear-fill fs-24 d-block mb-8px" style="color:#3498db"></i>
-                            <span class="alt-font text-white fw-600 fs-13 d-block">En Proceso</span>
-                            <span class="opacity-5 fs-11">Trabajando en tu auto</span>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="status-legend-card">
-                            <i class="bi bi-clock-fill fs-24 d-block mb-8px" style="color:#f39c12"></i>
-                            <span class="alt-font text-white fw-600 fs-13 d-block">En Espera</span>
-                            <span class="opacity-5 fs-11">Esperando repuesto</span>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="status-legend-card">
-                            <i class="bi bi-check-circle-fill fs-24 d-block mb-8px" style="color:#2ecc71"></i>
-                            <span class="alt-font text-white fw-600 fs-13 d-block">Listo</span>
-                            <span class="opacity-5 fs-11">Puede retirar</span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -538,8 +860,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-8 text-center last-paragraph-no-margin">
-                <h2 class="alt-font text-white fw-500 mb-15px ls-minus-2px">Listo para traer tu vehiculo?</h2>
-                <p class="opacity-7 fs-17 mb-35px">Visitanos en Chincha o escribenos ahora. Diagnostico rapido y preciso desde la primera visita.</p>
+                <h2 class="alt-font text-white fw-500 mb-15px ls-minus-2px">¿Listo para traer tu vehículo?</h2>
+                <p class="opacity-7 fs-17 mb-35px">Visítanos en Chincha o escríbenos ahora. Diagnóstico rápido y preciso desde la primera visita.</p>
                 <div class="cta-actions d-flex gap-3 justify-content-center flex-wrap">
                     <a href="https://wa.me/51946359204?text=Hola%20Mancuria,%20quiero%20agendar%20una%20cita" target="_blank"
                         class="btn btn-extra-large btn-base-color btn-hover-animation btn-rounded btn-box-shadow align-self-center">
@@ -559,9 +881,9 @@
     <div class="container">
         <div class="row justify-content-center text-center text-sm-start g-4">
             <div class="col-lg-3 col-sm-6">
-                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-map-pin align-text-bottom icon-extra-medium text-base-color me-10px"></i>Ubicacion</span>
-                <p class="mb-5px fs-14">Av. Jose Olaya 420<br>A una cuadra del local Arco Iris<br>Chincha 11702, Ica, Peru</p>
-                <a href="https://maps.google.com/?q=Av+Jose+Olaya+420+Chincha" target="_blank" class="text-decoration-line-bottom text-uppercase fs-13 alt-font fw-500">Abrir mapa</a>
+                <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-map-pin align-text-bottom icon-extra-medium text-base-color me-10px"></i>Ubicación</span>
+                <p class="mb-5px fs-14">Calle José Olaya 420<br>A una cuadra del local Arco Iris<br>Chincha Alta, Ica, Perú</p>
+                <a href="https://maps.google.com/?q=Calle+Jos%C3%A9+Olaya+420+Chincha+Alta+Ica+Per%C3%BA" target="_blank" class="text-decoration-line-bottom text-uppercase fs-13 alt-font fw-500">Abrir mapa</a>
             </div>
             <div class="col-lg-3 col-sm-6">
                 <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-phone-call align-text-bottom icon-extra-medium text-base-color me-10px"></i>Contacto</span>
@@ -572,7 +894,7 @@
             <div class="col-lg-3 col-sm-6">
                 <span class="alt-font d-block text-white mb-10px fs-18"><i class="feather icon-feather-clock align-text-bottom icon-extra-medium text-base-color me-10px"></i>Horarios</span>
                 <p class="mb-5px fs-14">Lun &ndash; Vie: 8:00 &ndash; 18:00</p>
-                <p class="mb-5px fs-14">Sabado: 8:00 &ndash; 13:00</p>
+                <p class="mb-5px fs-14">Sábado: 8:00 &ndash; 13:00</p>
                 <p class="mb-5px opacity-5 fs-14">Domingo: Cerrado</p>
             </div>
             <div class="col-lg-3 col-sm-6">
@@ -580,7 +902,7 @@
                 <p class="mb-20px fs-14">Recibe tips de mantenimiento y novedades</p>
                 <div class="d-inline-block w-100 newsletter-style-01 position-relative">
                     <form action="email-templates/subscribe-newsletter.php" method="post">
-                        <input class="bg-white input-small border-color-white form-control required" name="email" placeholder="Tu correo electronico" type="email">
+                        <input class="bg-white input-small border-color-white form-control required" name="email" placeholder="Tu correo electrónico" type="email">
                         <input type="hidden" name="redirect" value="">
                         <button class="btn btn-small btn-base-color ps-15px pe-15px base-color-hover submit" aria-label="submit"><i class="feather icon-feather-mail m-0 align-middle icon-small text-white"></i></button>
                     </form>
@@ -590,7 +912,7 @@
 
         <div class="row align-items-center pt-6 md-pt-40px">
             <div class="col-lg-3 col-sm-6 text-center text-sm-start">
-                <span class="alt-font fw-800 fs-24 text-white d-block" style="letter-spacing:-1px">MANCURIA</span>
+                <img src="images/mancuria-logo-final-nav.png" alt="Mancuria Mantenimiento Automotriz" class="footer-logo">
                 <p class="opacity-5 fs-12 mt-4px mb-0">Taller Automotriz Especializado - Chincha, Ica</p>
             </div>
             <div class="col-lg-6 order-1 order-sm-3 order-lg-1 md-mt-15px">
@@ -598,8 +920,8 @@
                     <li class="nav-item"><a href="index.html#inicio" class="nav-link">Inicio</a></li>
                     <li class="nav-item"><a href="index.html#servicios" class="nav-link">Servicios</a></li>
                     <li class="nav-item"><a href="buscarOT.html" class="nav-link">Buscar OT</a></li>
-                    <li class="nav-item"><a href="index.html#galeria" class="nav-link">Galeria</a></li>
-                    <li class="nav-item"><a href="index.html#ubicacion" class="nav-link">Ubicacion</a></li>
+                    <li class="nav-item"><a href="index.html#galeria" class="nav-link">Galería</a></li>
+                    <li class="nav-item"><a href="index.html#ubicacion" class="nav-link">Ubicación</a></li>
                 </ul>
             </div>
             <div class="col-lg-3 col-sm-6 order-3 order-sm-2 order-lg-3 text-center text-sm-end xs-mt-10px last-paragraph-no-margin">
@@ -629,181 +951,213 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
+    const db = getFirestore(app);
 
-    let unsub1 = null, unsub2 = null, lastPlaca = null;
+    let unsub1 = null, unsub2 = null;
     const CAPTCHA_KEY = "6LfrlrwsAAAAAGj55n4AnqgPR07iLEnnmywaJv-A";
 
-    // ── helpers ──────────────────────────────────────────
     function fmt(raw) {
         if (!raw) return null;
-        // Unix timestamp (ms or s)
         if (typeof raw === 'number') {
             const ms = raw > 1e12 ? raw : raw * 1000;
             return new Date(ms).toLocaleString('es-PE', {
-                day:'2-digit', month:'2-digit', year:'numeric',
-                hour:'2-digit', minute:'2-digit'
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
             });
         }
-        // Firestore Timestamp object
-        if (raw?.toDate) return raw.toDate().toLocaleString('es-PE', {
-            day:'2-digit', month:'2-digit', year:'numeric',
-            hour:'2-digit', minute:'2-digit'
-        });
-        // ISO string
+        if (raw?.toDate) {
+            return raw.toDate().toLocaleString('es-PE', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
         if (typeof raw === 'string') {
             const d = new Date(raw);
-            if (!isNaN(d)) return d.toLocaleString('es-PE', {
-                day:'2-digit', month:'2-digit', year:'numeric',
-                hour:'2-digit', minute:'2-digit'
-            });
+            if (!Number.isNaN(d.getTime())) {
+                return d.toLocaleString('es-PE', {
+                    day: '2-digit', month: '2-digit', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+            }
         }
         return String(raw);
     }
 
-    function badgeHTML(estado) {
-        const e = (estado || '').toLowerCase();
-        if (e.includes('listo') || e.includes('terminado') || e.includes('completo'))
-            return `<span class="ot-badge ot-badge-listo"><i class="bi bi-check-circle-fill"></i>${estado}</span>`;
-        if (e.includes('proceso') || e.includes('progreso') || e.includes('trabajando'))
-            return `<span class="ot-badge ot-badge-proceso"><i class="bi bi-gear-fill spin-icon"></i>${estado}</span>`;
-        if (e.includes('espera') || e.includes('pendiente') || e.includes('repuesto'))
-            return `<span class="ot-badge ot-badge-espera"><i class="bi bi-clock-fill"></i>${estado}</span>`;
-        if (e.includes('entregado'))
-            return `<span class="ot-badge ot-badge-entregado"><i class="bi bi-bag-check-fill"></i>${estado}</span>`;
-        return `<span class="ot-badge ot-badge-default"><i class="bi bi-circle"></i>${estado}</span>`;
+    function esc(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function normalizeText(raw) {
+        return String(raw || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function estadoMeta(raw) {
+        const clean = normalizeText(raw);
+        if (clean.includes('proceso') || clean.includes('progreso') || clean.includes('trabajando')) {
+            return { key: 'en_proceso', label: 'En Proceso', badgeClass: 'ot-badge-proceso', rank: 1 };
+        }
+        if (clean.includes('pendiente') || clean.includes('espera') || clean.includes('repuesto')) {
+            return { key: 'pendiente', label: 'Pendiente', badgeClass: 'ot-badge-pendiente', rank: 2 };
+        }
+        if (clean.includes('finalizado') || clean.includes('terminado') || clean.includes('completo') || clean.includes('listo') || clean.includes('entregado')) {
+            return { key: 'finalizado', label: 'Finalizado', badgeClass: 'ot-badge-finalizado', rank: 3 };
+        }
+        return null;
+    }
+
+    function badgeHTML(meta) {
+        const icon = meta.key === 'en_proceso'
+            ? 'bi bi-gear-fill'
+            : meta.key === 'pendiente'
+                ? 'bi bi-clock-fill'
+                : 'bi bi-check-circle-fill';
+        return `<span class="ot-badge ${meta.badgeClass}"><i class="${icon}"></i>${meta.label}</span>`;
+    }
+
+    function toMs(raw) {
+        if (!raw) return 0;
+        if (typeof raw === 'number') return raw > 1e12 ? raw : raw * 1000;
+        if (raw?.toDate) return raw.toDate().getTime();
+        if (typeof raw === 'string') {
+            const t = Date.parse(raw);
+            return Number.isNaN(t) ? 0 : t;
+        }
+        return 0;
+    }
+
+    function sortDateMs(data) {
+        return Math.max(
+            toMs(data.fechaIngreso),
+            toMs(data.fecha_ingreso),
+            toMs(data.fechaCreacion),
+            toMs(data.fecha_creacion),
+            toMs(data.fechaActualizacion),
+            toMs(data.fecha_actualizacion),
+            toMs(data.fechaEntrega),
+            toMs(data.fecha_entrega)
+        );
+    }
+
+    function otCode(data) {
+        const explicit = String(data.numero_ot || data.numeroOT || data.id || '').trim();
+        if (explicit && explicit !== '—' && explicit !== '-') return explicit;
+        const fallback = String(data._docId || '').trim();
+        if (!fallback) return 'S/N';
+        return fallback.slice(0, 8).toUpperCase();
     }
 
     function cardHTML(data) {
-        const estado     = data.estado          || 'Sin estado';
-        const cliente    = data.clienteNombre   || data.cliente || '—';
-        const marca      = data.marcaModelo      || data.marca  || '—';
-        const placa      = data.placa           || '—';
-        const km         = data.kilometraje != null ? Number(data.kilometraje).toLocaleString('es-PE') + ' km' : '—';
-        const falla      = data.fallaReportada  || data.falla || data.descripcion || '—';
-        const trabajo    = data.trabajoRealizado|| '';
-        const precio     = data.montoTotal      != null ? 'S/ ' + Number(data.montoTotal).toLocaleString('es-PE', {minimumFractionDigits:2}) : null;
-        const fechaIngreso = fmt(data.fechaIngreso || data.fecha_ingreso || data.fechaCreacion || data.fecha_creacion);
-        const fechaEntrega = fmt(data.fechaEntrega || data.fecha_entrega || data.fechaSalida || data.fechaActualizacion || data.fecha_actualizacion);
+        const meta = estadoMeta(data.estado);
+        if (!meta) return '';
 
-        // Decide color for monto
-        const isCompleted = ['listo','terminado','completo','entregado'].some(k => estado.toLowerCase().includes(k));
-        const estadoClass = isCompleted ? 'green' : estado.toLowerCase().includes('proceso') ? 'blue' : '';
+        const cliente = data.clienteNombre || data.cliente || 'No registrado';
+        const marca = data.marcaModelo || data.marca || 'No registrado';
+        const placa = data.placa || '-';
+        const km = data.kilometraje != null ? `${Number(data.kilometraje).toLocaleString('es-PE')} km` : 'No registrado';
+        const falla = data.fallaReportada || data.fallareportada || data.falla || data.descripcion || 'Sin falla reportada';
+        const trabajo = data.trabajoRealizado || 'Trabajo pendiente de registro.';
+        const fechaIngreso = fmt(data.fechaIngreso || data.fecha_ingreso || data.fechaCreacion || data.fecha_creacion) || 'No disponible';
+        const fechaEntrega = fmt(data.fechaEntrega || data.fecha_entrega || data.fechaSalida || data.fechaActualizacion || data.fecha_actualizacion) || 'Pendiente';
+        const hasMonto = data.montoTotal != null;
+        const monto = hasMonto
+            ? `S/ ${Number(data.montoTotal).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`
+            : 'No registrado';
 
         return `
         <div class="ot-result-card">
-            <!-- Header: OT number + badge -->
             <div class="ot-result-header">
                 <div>
-                    <span class="ot-num-label">Orden de Trabajo</span>
-                    <span class="ot-num-val">#${data.numero_ot || data.numeroOT || data.id || '—'}</span>
+                    <span class="ot-num-label">Orden de trabajo</span>
+                    <span class="ot-num-val">OT ${esc(otCode(data))}</span>
                 </div>
-                ${badgeHTML(estado)}
+                ${badgeHTML(meta)}
             </div>
-
             <div class="ot-result-body">
+                <div class="ot-falla-principal">
+                    <span class="ot-falla-label"><i class="bi bi-exclamation-circle"></i>Falla reportada</span>
+                    <h3>${esc(falla)}</h3>
+                </div>
 
-                <!-- Car highlight -->
-                <div class="ot-car-block">
-                    <div class="ot-car-icon">&#x1F697;</div>
-                    <div style="flex:1">
-                        <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">${marca}</div>
-                        <div class="ot-car-plate">${placa}</div>
+                <div class="ot-mini-grid">
+                    <div class="ot-mini-item">
+                        <span class="ot-mini-item-label">Vehículo</span>
+                        <span class="ot-mini-item-value">${esc(marca)}</span>
                     </div>
-                    <div style="text-align:right">
-                        <div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Kilometraje</div>
-                        <div style="font-size:20px;font-weight:700;color:#fff">${km}</div>
+                    <div class="ot-mini-item">
+                        <span class="ot-mini-item-label">Placa</span>
+                        <span class="ot-mini-item-value"><span class="ot-mini-plate">${esc(placa)}</span></span>
+                    </div>
+                    <div class="ot-mini-item">
+                        <span class="ot-mini-item-label">Cliente</span>
+                        <span class="ot-mini-item-value">${esc(cliente)}</span>
+                    </div>
+                    <div class="ot-mini-item">
+                        <span class="ot-mini-item-label">Kilometraje</span>
+                        <span class="ot-mini-item-value">${esc(km)}</span>
+                    </div>
+                    <div class="ot-mini-item">
+                        <span class="ot-mini-item-label">Ingreso</span>
+                        <span class="ot-mini-item-value ot-mini-item-value-muted">${esc(fechaIngreso)}</span>
+                    </div>
+                    <div class="ot-mini-item">
+                        <span class="ot-mini-item-label">Entrega</span>
+                        <span class="ot-mini-item-value ot-mini-item-value-muted">${esc(fechaEntrega)}</span>
+                    </div>
+                    <div class="ot-mini-item ot-mini-item-full">
+                        <span class="ot-mini-item-label">Trabajo realizado</span>
+                        <p class="ot-mini-work">${esc(trabajo)}</p>
                     </div>
                 </div>
 
-                <!-- Cliente + estado -->
-                <p class="ot-section-title"><i class="bi bi-person-circle"></i>Cliente</p>
-                <div class="ot-grid" style="margin-bottom:24px">
-                    <div class="ot-field">
-                        <span class="ot-field-label">Nombre</span>
-                        <span class="ot-field-value"><i class="bi bi-person-fill" style="opacity:.4"></i>${cliente}</span>
-                    </div>
-                    <div class="ot-field">
-                        <span class="ot-field-label">Estado actual</span>
-                        <span class="ot-field-value ${estadoClass}">${estado}</span>
-                    </div>
-                </div>
-
-                <!-- Dates -->
-                <p class="ot-section-title"><i class="bi bi-calendar3"></i>Fechas</p>
-                <div class="ot-dates-row">
-                    <div class="ot-date-box">
-                        <span class="ot-field-label">Fecha de Ingreso</span>
-                        <span class="ot-field-value" style="font-size:14px">
-                            <i class="bi bi-calendar-check" style="color:var(--base-color,#ff6b00)"></i>
-                            ${fechaIngreso || '<span style="opacity:.4">No disponible</span>'}
-                        </span>
-                        <i class="bi bi-box-arrow-in-right ot-date-box-icon"></i>
-                    </div>
-                    <div class="ot-date-box ${isCompleted ? 'completed' : ''}">
-                        <span class="ot-field-label">Fecha de Entrega</span>
-                        <span class="ot-field-value" style="font-size:14px">
-                            <i class="bi bi-calendar-check-fill" style="color:${isCompleted ? '#2ecc71' : 'rgba(255,255,255,.3)'}"></i>
-                            ${isCompleted && fechaEntrega
-                                ? `<span style="color:#2ecc71">${fechaEntrega}</span>`
-                                : '<span style="opacity:.4">Pendiente</span>'}
-                        </span>
-                        <i class="bi bi-box-arrow-right ot-date-box-icon"></i>
-                    </div>
-                </div>
-
-                <!-- Falla / trabajo -->
-                <p class="ot-section-title"><i class="bi bi-tools"></i>Servicio</p>
-                <div class="ot-work-block">
-                    ${falla !== '—' ? `
-                    <div style="margin-bottom:${trabajo ? '14px' : '0'}">
-                        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);display:block;margin-bottom:6px">Falla reportada</span>
-                        <p class="ot-work-text"><i class="bi bi-exclamation-circle me-8px" style="color:var(--base-color,#ff6b00)"></i>${falla}</p>
-                    </div>` : ''}
-                    ${trabajo ? `
-                    <div>
-                        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);display:block;margin-bottom:6px">Trabajo realizado</span>
-                        <p class="ot-work-text"><i class="bi bi-check2-circle me-8px" style="color:#2ecc71"></i>${trabajo}</p>
-                    </div>` : ''}
-                </div>
-
-                <!-- Price -->
-                ${precio ? `
                 <div class="ot-price-bar">
+                    <span class="ot-price-label">Total del servicio</span>
                     <div>
-                        <span class="ot-price-label"><i class="bi bi-receipt me-8px"></i>Total del servicio</span>
+                        <span class="ot-price-amount">${esc(monto)}</span>
+                        ${hasMonto ? '<span class="ot-price-currency">PEN</span>' : ''}
                     </div>
-                    <div>
-                        <span class="ot-price-amount">${precio}</span>
-                        <span class="ot-price-currency">PEN</span>
-                    </div>
-                </div>` : ''}
-
-            </div><!-- /.ot-result-body -->
+                </div>
+            </div>
         </div>`;
     }
 
-    // ── main search function ──────────────────────────────
     window.buscarOT = async function() {
-        const raw = document.getElementById('matriculaInput').value.trim().toUpperCase();
+        const input = document.getElementById('matriculaInput');
+        const raw = input.value.trim().toUpperCase();
         const matricula = raw.replace(/[^A-Z0-9]/g, '');
-        const result    = document.getElementById('otResultado');
-        const btn       = document.getElementById('btnBuscarOT');
+        const result = document.getElementById('otResultado');
+        const btn = document.getElementById('btnBuscarOT');
 
         if (!matricula) {
             result.innerHTML = `<div class="ot-alert ot-alert-warning">
                 <i class="bi bi-exclamation-circle ot-alert-icon"></i>
-                <span class="ot-alert-text">Por favor ingresa la matricula de tu vehiculo.</span>
+                <span class="ot-alert-text">Por favor ingresa la matrícula de tu vehículo.</span>
             </div>`;
             return;
         }
+
+        if (matricula.length < 5 || matricula.length > 8) {
+            result.innerHTML = `<div class="ot-alert ot-alert-warning">
+                <i class="bi bi-exclamation-circle ot-alert-icon"></i>
+                <span class="ot-alert-text">La placa debe tener entre 5 y 8 caracteres alfanumericos.</span>
+            </div>`;
+            return;
+        }
+
+        input.value = matricula.length > 3 ? `${matricula.slice(0, 3)}-${matricula.slice(3)}` : matricula;
 
         btn.disabled = true;
         btn.innerHTML = '<span><span class="btn-text"><span class="spin-icon">&#x21BB;</span> Validando...</span></span>';
         result.innerHTML = '';
 
         try {
-            // reCAPTCHA v3
             await new Promise(res => grecaptcha.ready(res));
             await grecaptcha.execute(CAPTCHA_KEY, { action: 'buscar_ot' });
 
@@ -813,43 +1167,109 @@
             btn.innerHTML = '<span><span class="btn-text"><span class="spin-icon">&#x21BB;</span> Buscando...</span></span>';
             result.innerHTML = `<div class="ot-loading">
                 <div class="ot-spinner"></div>
-                <p class="text-white mt-15px opacity-7">Consultando ordenes de trabajo...</p>
+                <p class="text-white mt-15px opacity-7">Consultando órdenes de trabajo...</p>
             </div>`;
 
-            lastPlaca = matricula;
-            const withDash = matricula.length > 3
-                ? matricula.slice(0,3) + '-' + matricula.slice(3)
-                : matricula;
-
+            const withDash = matricula.length > 3 ? `${matricula.slice(0, 3)}-${matricula.slice(3)}` : matricula;
             let allDocs = {};
             let resolved = false;
+            let selectedStatus = 'todos';
+
+            const setIdleButton = () => {
+                btn.disabled = false;
+                btn.innerHTML = '<span><span class="btn-text"><i class="bi bi-search me-8px"></i>Buscar</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>';
+            };
+
+            const orderedDocs = () => {
+                return Object.values(allDocs)
+                    .map(doc => ({ ...doc, _estadoMeta: estadoMeta(doc.estado), _sortDateMs: sortDateMs(doc) }))
+                    .filter(doc => doc._estadoMeta)
+                    .sort((a, b) => {
+                        const statusDiff = a._estadoMeta.rank - b._estadoMeta.rank;
+                        if (statusDiff !== 0) return statusDiff;
+                        return b._sortDateMs - a._sortDateMs;
+                    });
+            };
 
             function render() {
                 resolved = true;
-                btn.disabled = false;
-                btn.innerHTML = '<span><span class="btn-text"><i class="bi bi-search me-8px"></i>Buscar</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>';
+                setIdleButton();
                 if (Object.keys(allDocs).length === 0) return;
-                result.innerHTML = Object.entries(allDocs).map(([,d]) => cardHTML(d)).join('');
+
+                const prioritized = orderedDocs();
+                if (!prioritized.length) {
+                    result.innerHTML = `<div class="ot-empty">
+                        <i class="bi bi-funnel ot-empty-icon"></i>
+                        <div class="ot-empty-title">Sin OTs en estados activos</div>
+                        <div class="ot-empty-sub">Solo se muestran OTs en <strong style="color:#fff">En Proceso</strong>, <strong style="color:#fff">Pendiente</strong> o <strong style="color:#fff">Finalizado</strong>.</div>
+                    </div>`;
+                    return;
+                }
+
+                const filtered = selectedStatus === 'todos'
+                    ? prioritized
+                    : prioritized.filter(doc => doc._estadoMeta.key === selectedStatus);
+
+                const cardsHtml = filtered.length
+                    ? filtered.map(doc => cardHTML(doc)).join('')
+                    : `<div class="ot-empty">
+                        <i class="bi bi-sliders ot-empty-icon"></i>
+                        <div class="ot-empty-title">Sin coincidencias para este filtro</div>
+                        <div class="ot-empty-sub">Prueba con otro estado para ver más OTs.</div>
+                    </div>`;
+
+                result.innerHTML = `
+                    <div class="ot-results-header">
+                        <div class="ot-results-header-main">
+                            <i class="bi bi-clipboard-check"></i>
+                            <span>Resultados para <strong>${esc(input.value)}</strong></span>
+                        </div>
+                        <span class="ot-count">${filtered.length}</span>
+                    </div>
+                    <div class="ot-results-toolbar">
+                        <label for="otEstadoFiltro">Filtrar por estado</label>
+                        <select id="otEstadoFiltro" class="ot-filter-select">
+                            <option value="todos">Todos</option>
+                            <option value="en_proceso">En Proceso</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="finalizado">Finalizado</option>
+                        </select>
+                    </div>
+                    ${cardsHtml}
+                `;
+
+                const statusFilter = document.getElementById('otEstadoFiltro');
+                if (statusFilter) {
+                    statusFilter.value = selectedStatus;
+                    statusFilter.addEventListener('change', event => {
+                        selectedStatus = event.target.value;
+                        render();
+                    });
+                }
             }
 
             unsub1 = onSnapshot(
-                query(collection(db,'ordenes_trabajo'), where('placa','==', matricula)),
-                snap => { snap.forEach(d => { allDocs[d.id] = {...d.data(), _docId: d.id}; }); render(); }
+                query(collection(db, 'ordenes_trabajo'), where('placa', '==', matricula)),
+                snap => {
+                    snap.forEach(d => { allDocs[d.id] = { ...d.data(), _docId: d.id }; });
+                    render();
+                }
             );
             unsub2 = onSnapshot(
-                query(collection(db,'ordenes_trabajo'), where('placa','==', withDash)),
-                snap => { snap.forEach(d => { allDocs[d.id] = {...d.data(), _docId: d.id}; }); render(); }
+                query(collection(db, 'ordenes_trabajo'), where('placa', '==', withDash)),
+                snap => {
+                    snap.forEach(d => { allDocs[d.id] = { ...d.data(), _docId: d.id }; });
+                    render();
+                }
             );
 
-            // Timeout: no results
             setTimeout(() => {
                 if (!resolved || Object.keys(allDocs).length === 0) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<span><span class="btn-text"><i class="bi bi-search me-8px"></i>Buscar</span><span class="btn-icon"><i class="fa-solid fa-arrow-right"></i></span></span>';
+                    setIdleButton();
                     result.innerHTML = `<div class="ot-empty">
                         <i class="bi bi-search ot-empty-icon"></i>
-                        <div class="ot-empty-title">No se encontraron ordenes</div>
-                        <div class="ot-empty-sub">No hay OT registradas para la placa <strong style="color:#fff">${raw || matricula}</strong>.<br>Verifica la matricula o contactanos por WhatsApp.</div>
+                        <div class="ot-empty-title">No se encontraron órdenes</div>
+                        <div class="ot-empty-sub">No hay OTs registradas para la placa <strong style="color:#fff">${esc(raw || matricula)}</strong>.<br>Verifica la matrícula o contáctanos por WhatsApp.</div>
                         <a href="https://wa.me/51946359204?text=Hola%20Mancuria,%20consulto%20por%20la%20placa%20${matricula}" target="_blank"
                             class="btn btn-dark-gray btn-rounded mt-20px">
                             <i class="bi bi-whatsapp me-8px" style="color:#25D366"></i>Consultar por WhatsApp
@@ -857,7 +1277,6 @@
                     </div>`;
                 }
             }, 3500);
-
         } catch (err) {
             console.error(err);
             btn.disabled = false;
@@ -869,11 +1288,15 @@
         }
     };
 
-    // Pre-fill from URL param
     window.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('matriculaInput');
+        input.addEventListener('input', () => {
+            const clean = input.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 9);
+            if (input.value !== clean) input.value = clean;
+        });
         const p = new URLSearchParams(window.location.search).get('placa');
         if (p) {
-            document.getElementById('matriculaInput').value = decodeURIComponent(p);
+            input.value = decodeURIComponent(p);
             window.buscarOT();
         }
     });
@@ -884,3 +1307,6 @@
 <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
+
+
+
