@@ -509,6 +509,110 @@
         color: #4ade80;
         border: 1px solid rgba(34,197,94,.38);
     }
+    .ot-badge-entregado {
+        background: rgba(14,165,233,.16);
+        color: #38bdf8;
+        border: 1px solid rgba(14,165,233,.38);
+    }
+
+    /* ===== OT PHASE TRACKER ===== */
+    .ot-tracking {
+        margin-bottom: 12px;
+        padding: 13px 12px 12px;
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 10px;
+        background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+    }
+    .ot-tracking-title {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 13px;
+        color: rgba(255,255,255,.68);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .9px;
+        text-transform: uppercase;
+    }
+    .ot-tracking-title i { color: var(--base-color,#e5092d); }
+    .ot-tracking-track {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0;
+    }
+    .ot-tracking-road,
+    .ot-tracking-progress {
+        position: absolute;
+        top: 18px;
+        left: 12.5%;
+        height: 4px;
+        border-radius: 999px;
+    }
+    .ot-tracking-road {
+        right: 12.5%;
+        background: rgba(255,255,255,.14);
+    }
+    .ot-tracking-progress {
+        width: var(--phase-progress);
+        background: linear-gradient(90deg, #b50724, var(--base-color,#e5092d));
+        box-shadow: 0 0 12px rgba(229,9,45,.35);
+    }
+    .ot-tracking-step {
+        position: relative;
+        z-index: 1;
+        min-width: 0;
+        text-align: center;
+    }
+    .ot-tracking-marker {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        margin-bottom: 8px;
+        border: 3px solid #3b4352;
+        border-radius: 50%;
+        background: #121824;
+        color: #768092;
+        font-size: 15px;
+        transition: .3s ease;
+    }
+    .ot-tracking-step.is-complete .ot-tracking-marker {
+        border-color: var(--base-color,#e5092d);
+        background: #8f0b22;
+        color: #fff;
+    }
+    .ot-tracking-step.is-active .ot-tracking-marker {
+        border-color: #ff3655;
+        background: var(--base-color,#e5092d);
+        color: #fff;
+        font-size: 18px;
+        box-shadow: 0 0 0 5px rgba(229,9,45,.14), 0 0 22px rgba(229,9,45,.42);
+        transform: translateY(-2px);
+    }
+    .ot-tracking-label {
+        display: block;
+        color: rgba(255,255,255,.38);
+        font-size: 9px;
+        font-weight: 800;
+        line-height: 1.25;
+        letter-spacing: .35px;
+        text-transform: uppercase;
+        overflow-wrap: anywhere;
+    }
+    .ot-tracking-step.is-complete .ot-tracking-label { color: rgba(255,255,255,.7); }
+    .ot-tracking-step.is-active .ot-tracking-label { color: #fff; }
+    .ot-tracking-current {
+        display: block;
+        min-height: 13px;
+        margin-top: 3px;
+        color: #ff6077;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .6px;
+        text-transform: uppercase;
+    }
 
     .ot-result-body {
         padding: 12px 14px 14px;
@@ -712,6 +816,30 @@
         .ot-result-body { padding: 11px 12px 12px; }
         .ot-num-val { font-size: 15px; }
         .ot-badge { font-size: 10px; padding: 5px 8px; }
+        .ot-tracking { padding: 13px; }
+        .ot-tracking-track { grid-template-columns: 1fr; gap: 9px; }
+        .ot-tracking-road,
+        .ot-tracking-progress { display: none; }
+        .ot-tracking-step {
+            display: grid;
+            grid-template-columns: 38px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+        }
+        .ot-tracking-step:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            left: 18px;
+            top: 38px;
+            width: 2px;
+            height: 11px;
+            background: rgba(255,255,255,.14);
+        }
+        .ot-tracking-step.is-complete:not(:last-child)::after { background: var(--base-color,#e5092d); }
+        .ot-tracking-marker { width: 38px; height: 38px; margin: 0; }
+        .ot-tracking-label { font-size: 10px; }
+        .ot-tracking-current { min-height: 0; margin: 0; }
         .ot-falla-principal { padding: 11px 12px; }
         .ot-falla-principal h3 { font-size: 22px; -webkit-line-clamp: 4; }
         .ot-mini-grid { grid-template-columns: 1fr; gap: 9px; }
@@ -1010,14 +1138,17 @@
 
     function estadoMeta(raw) {
         const clean = normalizeText(raw);
+        if (clean.includes('entregado') || clean.includes('entrega realizada')) {
+            return { key: 'entregado', label: 'Entregado', badgeClass: 'ot-badge-entregado', rank: 4, phaseIndex: 3 };
+        }
         if (clean.includes('proceso') || clean.includes('progreso') || clean.includes('trabajando')) {
-            return { key: 'en_proceso', label: 'En Proceso', badgeClass: 'ot-badge-proceso', rank: 1 };
+            return { key: 'en_proceso', label: 'En Proceso', badgeClass: 'ot-badge-proceso', rank: 1, phaseIndex: 1 };
         }
         if (clean.includes('pendiente') || clean.includes('espera') || clean.includes('repuesto')) {
-            return { key: 'pendiente', label: 'Pendiente', badgeClass: 'ot-badge-pendiente', rank: 2 };
+            return { key: 'pendiente', label: 'Pendiente', badgeClass: 'ot-badge-pendiente', rank: 2, phaseIndex: 0 };
         }
-        if (clean.includes('finalizado') || clean.includes('terminado') || clean.includes('completo') || clean.includes('listo') || clean.includes('entregado')) {
-            return { key: 'finalizado', label: 'Finalizado', badgeClass: 'ot-badge-finalizado', rank: 3 };
+        if (clean.includes('finalizado') || clean.includes('terminado') || clean.includes('completo') || clean.includes('listo')) {
+            return { key: 'finalizado', label: 'Finalizado', badgeClass: 'ot-badge-finalizado', rank: 3, phaseIndex: 2 };
         }
         return null;
     }
@@ -1027,8 +1158,44 @@
             ? 'bi bi-gear-fill'
             : meta.key === 'pendiente'
                 ? 'bi bi-clock-fill'
-                : 'bi bi-check-circle-fill';
+                : meta.key === 'entregado'
+                    ? 'bi bi-key-fill'
+                    : 'bi bi-check-circle-fill';
         return `<span class="ot-badge ${meta.badgeClass}"><i class="${icon}"></i>${meta.label}</span>`;
+    }
+
+    function trackingHTML(meta) {
+        const phases = [
+            { key: 'pendiente', label: 'Pendiente', icon: 'bi bi-clock-fill' },
+            { key: 'en_proceso', label: 'En Proceso', icon: 'fa-solid fa-car-side' },
+            { key: 'finalizado', label: 'Finalizado', icon: 'bi bi-check-circle-fill' },
+            { key: 'entregado', label: 'Entregado', icon: 'bi bi-key-fill' }
+        ];
+        const progressByPhase = ['0%', '25%', '50%', '75%'];
+        const steps = phases.map((phase, index) => {
+            const stateClass = index < meta.phaseIndex
+                ? 'is-complete'
+                : index === meta.phaseIndex
+                    ? 'is-active'
+                    : 'is-future';
+            const markerIcon = index < meta.phaseIndex ? 'bi bi-check-lg' : phase.icon;
+            return `
+                <div class="ot-tracking-step ${stateClass}">
+                    <span class="ot-tracking-marker"><i class="${markerIcon}"></i></span>
+                    <span class="ot-tracking-label">${phase.label}</span>
+                    <span class="ot-tracking-current">${index === meta.phaseIndex ? 'Ahora' : ''}</span>
+                </div>`;
+        }).join('');
+
+        return `
+            <div class="ot-tracking" aria-label="Seguimiento de la orden: ${esc(meta.label)}">
+                <div class="ot-tracking-title"><i class="bi bi-signpost-split-fill"></i>Seguimiento de la orden</div>
+                <div class="ot-tracking-track" style="--phase-progress:${progressByPhase[meta.phaseIndex]}">
+                    <span class="ot-tracking-road"></span>
+                    <span class="ot-tracking-progress"></span>
+                    ${steps}
+                </div>
+            </div>`;
     }
 
     function toMs(raw) {
@@ -1092,6 +1259,8 @@
                 ${badgeHTML(meta)}
             </div>
             <div class="ot-result-body">
+                ${trackingHTML(meta)}
+
                 <div class="ot-falla-principal">
                     <span class="ot-falla-label"><i class="bi bi-exclamation-circle"></i>Falla reportada</span>
                     <h3>${esc(falla)}</h3>
@@ -1212,7 +1381,7 @@
                     result.innerHTML = `<div class="ot-empty">
                         <i class="bi bi-funnel ot-empty-icon"></i>
                         <div class="ot-empty-title">Sin OTs en estados activos</div>
-                        <div class="ot-empty-sub">Solo se muestran OTs en <strong style="color:#fff">En Proceso</strong>, <strong style="color:#fff">Pendiente</strong> o <strong style="color:#fff">Finalizado</strong>.</div>
+                        <div class="ot-empty-sub">Solo se muestran OTs en <strong style="color:#fff">Pendiente</strong>, <strong style="color:#fff">En Proceso</strong>, <strong style="color:#fff">Finalizado</strong> o <strong style="color:#fff">Entregado</strong>.</div>
                     </div>`;
                     return;
                 }
@@ -1241,9 +1410,10 @@
                         <label for="otEstadoFiltro">Filtrar por estado</label>
                         <select id="otEstadoFiltro" class="ot-filter-select">
                             <option value="todos">Todos</option>
-                            <option value="en_proceso">En Proceso</option>
                             <option value="pendiente">Pendiente</option>
+                            <option value="en_proceso">En Proceso</option>
                             <option value="finalizado">Finalizado</option>
+                            <option value="entregado">Entregado</option>
                         </select>
                     </div>
                     ${cardsHtml}
