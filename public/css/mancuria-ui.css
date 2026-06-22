@@ -13,6 +13,16 @@
     --mancuria-shadow: 0 22px 60px rgba(0, 0, 0, .34);
 }
 
+/*
+ * Crafto oculta los nodos data-anime hasta que main.js inicia la animacion.
+ * Si ese inicializador falla o se retrasa, el contenido no debe desaparecer.
+ * Los estilos inline de Anime.js conservan prioridad cuando la animacion corre.
+ */
+[data-anime] {
+    opacity: 1;
+    visibility: visible;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -175,6 +185,25 @@ header .navbar-toggler-line {
 
 #inicio {
     background-size: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    height: auto !important;
+    min-height: calc(100svh - 72px) !important;
+    margin-top: 0 !important;
+    padding: 52px 0 46px !important;
+    scroll-margin-top: 72px;
+}
+
+#inicio .container.h-100,
+#inicio .row.h-100,
+#inicio .col-md-12.h-100 {
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+#inicio .container {
+    position: relative;
+    z-index: 1;
 }
 
 .ot-hero {
@@ -233,6 +262,28 @@ header .navbar-toggler-line {
 
 .hero-desc {
     margin-top: 8px !important;
+}
+
+#inicio .hero-brand-logo,
+#inicio .hero-subtitle,
+#inicio .hero-desc,
+#inicio .hero-actions,
+#inicio .bottom-60px,
+#inicio .md-bottom-40px,
+#inicio .xs-bottom-20px {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
+
+#inicio .container,
+#inicio .row,
+#inicio .col-md-12 {
+    max-width: 100%;
+}
+
+#particles-style-01 {
+    pointer-events: none;
 }
 
 #inicio .bottom-60px,
@@ -520,6 +571,20 @@ footer .newsletter-style-01 button {
         width: calc(100% - 32px) !important;
     }
 
+    header .navbar-collapse .navbar-nav .nav-link {
+        color: rgba(255, 255, 255, .86) !important;
+        background: transparent;
+        display: block;
+        width: 100%;
+        padding: 11px 14px !important;
+    }
+
+    header .navbar-collapse .navbar-nav .nav-link:hover,
+    header .navbar-collapse .navbar-nav .nav-link.active {
+        color: var(--mancuria-red) !important;
+        background: rgba(229, 9, 45, .12) !important;
+    }
+
     .hero-actions,
     .cta-actions {
         width: 100%;
@@ -538,25 +603,84 @@ footer .newsletter-style-01 button {
 
 @media (max-width: 575px) {
     #inicio {
-        min-height: 620px !important;
+        display: block !important;
+        min-height: auto !important;
+        padding: 36px 0 34px !important;
+        overflow: hidden;
+    }
+
+    #inicio .container {
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+    }
+
+    #inicio .col-md-12 {
+        min-width: 0;
     }
 
     .hero-brand-logo {
-        width: min(350px, 90vw);
-        margin-bottom: 22px;
+        width: 100% !important;
+        max-width: 310px !important;
+        min-width: 0 !important;
+        margin: 0 auto 22px !important;
     }
 
     .hero-subtitle {
-        font-size: 25px !important;
+        display: block;
+        width: 100%;
+        max-width: 320px !important;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 24px !important;
+        line-height: 1.15 !important;
         top: 0 !important;
+        white-space: normal !important;
     }
 
     .hero-desc {
+        width: 100%;
+        max-width: 310px !important;
         font-size: 14px !important;
         line-height: 1.55;
         margin-top: 0 !important;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 0;
+        padding-right: 0;
+        white-space: normal !important;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    .hero-actions {
+        align-items: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .hero-actions .btn,
+    .cta-actions .btn {
+        width: 100%;
+        max-width: 310px !important;
+        box-sizing: border-box;
+    }
+
+    #inicio .bottom-60px,
+    #inicio .md-bottom-40px,
+    #inicio .xs-bottom-20px {
+        width: 100%;
+        max-width: 310px !important;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+    }
+
+    #inicio .bottom-60px span,
+    #inicio .md-bottom-40px span,
+    #inicio .xs-bottom-20px span {
+        display: block;
+        white-space: normal !important;
+        line-height: 1.45;
     }
 
     .ot-hero {
@@ -629,4 +753,71 @@ footer .newsletter-style-01 button {
 .recaptcha-note a {
     color: rgba(255, 255, 255, .58);
     text-decoration: underline;
+}
+
+@media (max-width: 575px) {
+    .ot-hero {
+        overflow-x: hidden;
+    }
+
+    .ot-hero .container {
+        max-width: 100% !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    .ot-hero .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .ot-hero [class*="col-"] {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .ot-hero h1,
+    .ot-hero p {
+        max-width: 292px !important;
+        margin-left: auto;
+        margin-right: auto;
+        overflow-wrap: anywhere;
+    }
+
+    .ot-search-wrapper {
+        width: 100% !important;
+        max-width: 292px !important;
+        margin-left: auto;
+        margin-right: auto;
+        overflow: hidden;
+        padding: 20px 16px !important;
+    }
+
+    .ot-input-group {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    #matriculaInput,
+    .ot-input-group .btn,
+    .ot-input-group button {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box;
+    }
+
+    .ot-results-header,
+    .ot-result-card,
+    .ot-alert {
+        max-width: 100% !important;
+        overflow: hidden;
+    }
+
+    .ot-mini-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
 }

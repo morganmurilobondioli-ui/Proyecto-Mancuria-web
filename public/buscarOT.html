@@ -745,7 +745,7 @@
     .ot-empty-title { font-size: 18px; color: #fff; font-weight: 600; margin-bottom: 8px; }
     .ot-empty-sub   { font-size: 14px; color: rgba(255,255,255,.5); }
     </style>
-    <link rel="stylesheet" href="css/mancuria-ui.css"/>
+    <link rel="stylesheet" href="css/mancuria-ui.css?v=20260622-animation-fallback"/>
 </head>
 <body data-mobile-nav-style="classic">
 
@@ -992,6 +992,15 @@
             .replace(/'/g, '&#39;');
     }
 
+    function formatReportedFailures(raw) {
+        const values = Array.isArray(raw) ? raw : String(raw ?? '').split(',');
+        const formatted = values
+            .map(value => String(value).trim())
+            .filter(Boolean)
+            .join(', ');
+        return formatted || 'Sin falla reportada';
+    }
+
     function normalizeText(raw) {
         return String(raw || '')
             .toLowerCase()
@@ -1062,7 +1071,9 @@
         const marca = data.marcaModelo || data.marca || 'No registrado';
         const placa = data.placa || '-';
         const km = data.kilometraje != null ? `${Number(data.kilometraje).toLocaleString('es-PE')} km` : 'No registrado';
-        const falla = data.fallaReportada || data.fallareportada || data.falla || data.descripcion || 'Sin falla reportada';
+        const falla = formatReportedFailures(
+            data.fallaReportada || data.fallareportada || data.falla || data.descripcion
+        );
         const trabajo = data.trabajoRealizado || 'Trabajo pendiente de registro.';
         const fechaIngreso = fmt(data.fechaIngreso || data.fecha_ingreso || data.fechaCreacion || data.fecha_creacion) || 'No disponible';
         const fechaEntrega = fmt(data.fechaEntrega || data.fecha_entrega || data.fechaSalida || data.fechaActualizacion || data.fecha_actualizacion) || 'Pendiente';
@@ -1307,6 +1318,3 @@
 <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
-
-
-
